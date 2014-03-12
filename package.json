@@ -1,0 +1,12 @@
+{
+  "name": "bnc",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "coffee app.coffee"
+  },
+  "dependencies": {
+    "express": "*",
+    "jade": "*",
+    "stylus": "*"
+  }
+}
