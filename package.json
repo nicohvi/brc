@@ -4,9 +4,17 @@
   "scripts": {
     "start": "coffee app.coffee"
   },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nicohvi/brc.git"
+  },
   "dependencies": {
     "express": "*",
     "jade": "*",
     "stylus": "*"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "jasmine-node": "*"
   }
 }
