@@ -1,8 +1,6 @@
 server = require './utils/server'
-config = require ('./utils/config')
 app = server.app
 fs = require 'fs'
-database = require './utils/db'
 express = require 'express'
 
 # use jade for view templates
@@ -21,6 +19,11 @@ app.use(app.router)
 fs.readdirSync("#{__dirname}/app/controllers").forEach (file) ->
   route = require "#{__dirname}/app/controllers/#{file}"
   route.controller(app)
+
+require('./lib/init')(app)
+
+# use basic auth
+app.use(express.basicAuth 'username', 'password')
 
 # start the server
 server.start app.get('port'), ->
