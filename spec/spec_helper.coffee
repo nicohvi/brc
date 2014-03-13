@@ -1,6 +1,6 @@
 request = require 'request'
 
-jasmine.getEnv().addReporter(new jasmine.ConsoleReporter(console.log));
+jasmine.getEnv().addReporter(new jasmine.ConsoleReporter(console.log))
 
 get = (path, callback) ->
   request "http://localhost:8100#{path}", callback

@@ -11,7 +11,8 @@
   "dependencies": {
     "express": "*",
     "jade": "*",
-    "stylus": "*"
+    "stylus": "*",
+    "nano": "*"
   },
   "devDependencies": {
     "grunt": "*",

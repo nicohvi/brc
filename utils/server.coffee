@@ -1,6 +1,6 @@
 express = require 'express'
 exports.app = app = express()
-require './routes'
+app.set('root', './')
 
 exports.start = (port, callback) ->
   unless @.server
