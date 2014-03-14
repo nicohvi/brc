@@ -12,18 +12,13 @@ app.use(express.logger())
 
 # set environment variables
 app.set('port', process.env.port || 8000)
-app.use(express.static("#{__dirname}/public"))
-app.use(app.router)
+app.use(express.static("#{__dirname}/app/assets"))
 
 # load the controllers
-fs.readdirSync("#{__dirname}/app/controllers").forEach (file) ->
-  route = require "#{__dirname}/app/controllers/#{file}"
-  route.controller(app)
+require('./lib/init')(app, {})
 
-require('./lib/init')(app)
-
-# use basic auth
-app.use(express.basicAuth 'username', 'password')
+# use passport for auth
+require './lib/auth'
 
 # start the server
 server.start app.get('port'), ->

@@ -1,14 +1,66 @@
 express = require 'express'
 fs = require 'fs'
 
-module.exports = (parentApp) ->
+module.exports = (app, options) ->
+  verbose = options.verbose
   fs.readdirSync("#{__dirname}/../app/controllers").forEach (name) ->
-    console.log('\n %s', name)
-    # TODO: create MVC-like controllers
-    # controller = require "./../app/controllers/#{name}"
-    # app = express()
-    # method, path
 
-    # middleware
-    # if controller.before
-      # path = "/#{name}/:"
+    verbose && console.log "File: #{name}"
+
+    controller = require "./../app/controllers/#{name}"
+    middleware = express()
+    name = controller.name || name
+    prefix = controller.prefix || ''
+    method = ''
+    path = ''
+
+    # set view folder for the controller middleware
+    middleware.set('views', "#{__dirname}/../app/views")
+
+    # before_filter
+    if controller.before
+      path = '/'
+      middleware.all(path, controller.before)
+      verbose && console.log "before_all: #{controller.before}"
+
+    # generate routes based on exported controller methods
+    for action of controller
+      # "reserved" exports
+      continue if (~['name', 'prefix', 'engine', 'before'].indexOf(action))
+
+      switch action
+        when 'new'
+          method = 'get'
+          path = "/#{name}/new"
+
+        when 'create'
+          method = 'post'
+          path = "/#{name}"
+
+        when 'show'
+          method = 'get'
+          path = "/#{name}/:#{name}_id"
+
+        when 'edit'
+          method = 'get'
+          path = "/#{name}/:#{name}_id/edit"
+
+        when 'update'
+          method = 'put'
+          path = "/#{name}/:#{name}_id"
+
+        when 'index'
+          method = 'get'
+          path = '/'
+
+        else
+          throw new Error "Unrecognized route: #{name}##{action}"
+
+      path = prefix + path
+
+      verbose && console.log "\n method: #{method}, action: #{action}"
+
+      middleware[method](path, controller[action])
+
+    # use the newly configured middleware
+    app.use(middleware)

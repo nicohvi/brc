@@ -8,23 +8,21 @@ app = server.app
 # set up envirnoment variables
 # use jade for view templates
 app.set('view engine', 'jade')
-app.set('views', "../app/views")
 
 # TODO: use winston for logging
 app.use(express.logger())
 
 # set environment variables
 app.use(express.static("../public"))
-app.use(app.router)
 
 # load the controllers
-fs.readdirSync("../app/controllers").forEach (file) ->
-  route = require "../app/controllers/#{file}"
-  route.controller(app)
+require('./init')(app, { verbose: true} )
 
 server.start 8100, ->
   jasmineNode = spawn('jasmine-node',
-                      ['--coffee', '--color', '--autotest', '../spec/'])
+                      [ '../spec', '--coffee', '--autotest',
+                        '--watch','.', '--color', '--junitreport',
+                        '--output', '../spec/reports'])
 
   logToConsole = (data) ->
     console.log(String(data))

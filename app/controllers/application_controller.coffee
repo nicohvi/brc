@@ -1,9 +1,9 @@
 User = require '../models/user'
 db = require '../../utils/db'
 
-module.exports.controller = (app) ->
+# login filter
+exports.before = (req, res, next) ->
+  res.redirect('/login') unless req.user
 
-  # root route
-  app.get '/', (req, res) ->
-
-    res.render 'application/index'
+exports.index = (req, res) ->
+  res.render 'application/index'

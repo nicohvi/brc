@@ -12,7 +12,8 @@
     "express": "*",
     "jade": "*",
     "stylus": "*",
-    "nano": "*"
+    "nano": "*",
+    "passport": "*"
   },
   "devDependencies": {
     "grunt": "*",
