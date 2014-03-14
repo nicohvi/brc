@@ -53,6 +53,10 @@ module.exports = (app, options) ->
           method = 'get'
           path = '/'
 
+        when 'login'
+          method = 'get'
+          path = '/login'
+          
         else
           throw new Error "Unrecognized route: #{name}##{action}"
 

@@ -20,9 +20,8 @@ require('./init')(app, { verbose: true} )
 
 server.start 8100, ->
   jasmineNode = spawn('jasmine-node',
-                      [ '../spec', '--coffee', '--autotest',
-                        '--watch','.', '--color', '--junitreport',
-                        '--output', '../spec/reports'])
+                      [ '../spec', '--coffee', '--color', '--verbose',
+                      '--junitreport', '--output', '../spec/reports'])
 
   logToConsole = (data) ->
     console.log(String(data))

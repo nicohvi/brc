@@ -1,5 +1,4 @@
 User = require '../models/user'
-db = require '../../utils/db'
 
 # login filter
 exports.before = (req, res, next) ->
@@ -7,3 +6,6 @@ exports.before = (req, res, next) ->
 
 exports.index = (req, res) ->
   res.render 'application/index'
+
+exports.login = (req, res) ->
+  res.render 'application/login'
