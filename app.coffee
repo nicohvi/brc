@@ -1,6 +1,5 @@
 server = require './utils/server'
 app = server.app
-fs = require 'fs'
 express = require 'express'
 
 # use jade for view templates

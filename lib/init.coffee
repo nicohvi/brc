@@ -19,7 +19,7 @@ module.exports = (app, options) ->
 
     # before_filter
     if controller.before
-      path = '/'
+      path = '*'
       middleware.all(path, controller.before)
       verbose && console.log "before_all: #{controller.before}"
 
@@ -56,6 +56,10 @@ module.exports = (app, options) ->
         when 'login'
           method = 'get'
           path = '/login'
+
+        when 'login!'
+          method = 'get'
+          path = '/login!'
           
         else
           throw new Error "Unrecognized route: #{name}##{action}"

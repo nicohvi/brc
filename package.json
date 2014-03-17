@@ -13,7 +13,8 @@
     "jade": "*",
     "stylus": "*",
     "nano": "*",
-    "passport": "*"
+    "passport": "*",
+    "passport-local": "*"
   },
   "devDependencies": {
     "grunt": "*",
