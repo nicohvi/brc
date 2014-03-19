@@ -14,10 +14,14 @@
     "stylus": "*",
     "nano": "*",
     "passport": "*",
-    "passport-local": "*"
+    "passport-local": "*",
+    "connect-flash": "*",
+    "bcrypt-nodejs": "*"
   },
   "devDependencies": {
     "grunt": "*",
-    "jasmine-node": "*"
+    "jasmine-node": "*",
+    "supertest": "*",
+    "superagent": "*"
   }
 }

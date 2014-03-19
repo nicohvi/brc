@@ -6,6 +6,7 @@ exports.before = (req, res, next) ->
   # redirect users to login page unless they're logged in or
   # are attempting to do so.
   if ( req.user || ~req.url.indexOf 'login' )
+    console.log "user #{util.inspect(req)}"
     next()
   else
     res.redirect('/login')

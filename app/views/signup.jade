@@ -1,0 +1,16 @@
+h1 So, signing up, huh?
+
+form(action="/signup" method="post")
+
+    if message.length > 0
+      div.alert #{message}
+
+    label Email
+    input(type="text" name="email" placeholder="derp@derp.com")
+
+    label Password
+    input(type="password" name="password")
+
+    button(type="submit") Signup
+
+p Or, you know, maybe you should <a href="/login">login</a>?
