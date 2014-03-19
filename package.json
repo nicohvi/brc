@@ -12,7 +12,7 @@
     "express": "*",
     "jade": "*",
     "stylus": "*",
-    "nano": "*",
+    "mongoose": "*",
     "passport": "*",
     "passport-local": "*",
     "connect-flash": "*",

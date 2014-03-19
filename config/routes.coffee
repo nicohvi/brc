@@ -19,9 +19,12 @@ module.exports = (app, passport) ->
     res.render('login.jade', { message: req.flash 'loginMessage' })
   )
 
-  # app.post('/login', (req, res) ->
-    # passport stuff
-  # )
+  app.post('/login', passport.authenticate('local-login', {
+      successRedirect: '/home',
+      failureRedirect: '/login',
+      failureFlash: true
+    }) # authenticate
+  )
 
   app.get('/home', isLoggedIn, (req, res) ->
     res.render('home.jade', { user: req.user })

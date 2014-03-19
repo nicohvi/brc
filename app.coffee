@@ -1,19 +1,17 @@
 Server = require './server'
-Database = require './db'
 express = require 'express'
 app = express()
 port = process.env.PORT || 8000
 passport = require 'passport'
 flash = require 'connect-flash'
 config = require './config/config'
-nano = require('nano')(config.databaseUrl)
+mongoose = require 'mongoose'
 
 # use passport for auth
 require('./config/passport')(passport)
 
-# use nano for interfacing with couchDB
-nano.db.create 'brc'
-new Database(nano.use 'brc')
+# mongoDB 4life
+mongoose.connect config.databaseURL
 
 app.configure ->
   # use jade for view templates
@@ -33,13 +31,8 @@ app.configure ->
   app.use passport.session()
   app.use flash()
 
-# set up the database
-
 # routes
 require('./config/routes')(app, passport)
-
-# load the controllers
-# require('./lib/init')(app, {})
 
 # start the server
 Server.start(app, port, ->
