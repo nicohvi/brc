@@ -29,7 +29,7 @@ module.exports = (passport) ->
           return done(null, false, req.flash('signupMessage', 'That email is already taken.')) if user
 
           # all is well, create the new user.
-          user = new User({ email: email, password: User.generateHash(password) })
+          user = new User({ email: email, password: password })
           user.save((error) ->
             throw error if error
             done(null, user)
