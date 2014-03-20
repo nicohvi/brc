@@ -21,6 +21,7 @@
   "devDependencies": {
     "grunt": "*",
     "supertest": "*",
+    "superagent": "*",
     "mocha": "*",
     "should": "*",
     "grunt-mocha-test": "*",

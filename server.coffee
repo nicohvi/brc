@@ -1,17 +1,20 @@
-module.exports = (port) ->
+module.exports = (port, env) ->
   express = require 'express'
+  mongoose = require 'mongoose'
   app = express()
   port = port || 8000
   passport = require 'passport'
   flash = require 'connect-flash'
   config = require './config/config'
-  mongoose = require 'mongoose'
+
+  # set application environment
+  env = env || 'dev'
+
+  # set up database
+  mongoose.connect "#{config.databaseURL}/#{env}"
 
   # use passport for auth
   require('./config/passport')(passport)
-
-  # mongoDB 4life
-  mongoose.connect config.databaseURL
 
   app.configure ->
     # use jade for view templates
@@ -30,6 +33,7 @@ module.exports = (port) ->
     app.use passport.initialize()
     app.use passport.session()
     app.use flash()
+    app.set('env', env || 'dev')
 
   # routes
   require('./config/routes')(app, passport)
