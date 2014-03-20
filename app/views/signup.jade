@@ -1,16 +1,19 @@
-h1 So, signing up, huh?
+extends layout
 
-form(action="/signup" method="post")
+block content
+  h1 So, signing up, huh?
 
-    if message.length > 0
-      div.alert #{message}
+  form(action="/signup" method="post")
 
-    label Email
-    input(type="text" name="email" placeholder="derp@derp.com")
+      if message.length > 0
+        div.alert #{message}
 
-    label Password
-    input(type="password" name="password")
+      label Email
+      input(type="text" name="email" placeholder="derp@derp.com")
 
-    button(type="submit") Signup
+      label Password
+      input(type="password" name="password")
 
-p Or, you know, maybe you should <a href="/login">login</a>?
+      button(type="submit") Signup
+
+  p Or, you know, maybe you should <a href="/login">login</a>?

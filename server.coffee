@@ -6,6 +6,7 @@ module.exports = (port, env) ->
   passport = require 'passport'
   flash = require 'connect-flash'
   config = require './config/config'
+  stylus = require 'stylus'
 
   # set application environment
   env = env || 'dev'
@@ -25,7 +26,6 @@ module.exports = (port, env) ->
     app.use express.logger('dev')
 
     # set environment variables
-    app.use express.static("#{__dirname}/app/assets")
     app.use express.cookieParser()
     app.use express.bodyParser()
     app.use express.session({ secret: 'troll dog' })
@@ -33,7 +33,16 @@ module.exports = (port, env) ->
     app.use passport.initialize()
     app.use passport.session()
     app.use flash()
-    app.set('env', env || 'dev')
+    app.set('env', env)
+
+    # use stylus
+    app.use stylus.middleware {
+      src:   "#{__dirname}/app/assets/stylesheets",
+      dest:  "#{__dirname}/public",
+      debug: true,
+      force: true
+    }
+    app.use express.static("#{__dirname}/public")
 
   # routes
   require('./config/routes')(app, passport)
