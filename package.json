@@ -21,6 +21,7 @@
   "devDependencies": {
     "grunt": "*",
     "supertest": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "should": "*"
   }
 }
