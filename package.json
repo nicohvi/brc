@@ -22,6 +22,9 @@
     "grunt": "*",
     "supertest": "*",
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "grunt-mocha-test": "*",
+    "grunt-contrib-watch": "*",
+    "coffee-script": "*"
   }
 }
