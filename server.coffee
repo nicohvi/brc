@@ -12,7 +12,7 @@ module.exports = (port, env) ->
   env = env || 'dev'
 
   # set up database
-  mongoose.connect "#{config.databaseURL}/#{env}"
+  global.db = mongoose.createConnection("#{config.databaseURL}/#{env}")
 
   # use passport for auth
   require('./config/passport')(passport)

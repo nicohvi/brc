@@ -21,7 +21,7 @@ module.exports = (passport) ->
       passReqToCallback: true
     },
     (req, email, password, done) ->
-      # ensures that User.findByEmail is not fired unless
+      # ensures that User.findOne is not fired unless
       # data is returned from the router.
       process.nextTick ->
         User.findOne({ email: email }, (error, user) ->
@@ -34,7 +34,7 @@ module.exports = (passport) ->
             throw error if error
             done(null, user)
           ) # save
-        ) # findByEmail
+        ) # findOne
   ) # passport.use
 
 
@@ -51,5 +51,5 @@ module.exports = (passport) ->
         return done(null, false, req.flash('loginMessage', 'Wrong password, brah.')) unless user.validPassword(password)
         # all is well
         return done(null, user)
-      ) #findByEmail
+      ) #findOne
   ) # passport.use

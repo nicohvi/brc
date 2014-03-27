@@ -1,20 +1,20 @@
 request = require 'supertest'
 superagent = require 'superagent'
 should = require 'should'
-User = require '../app/models/user'
-# inspect = require('util').inspect
 app = require('../server')(8100, 'test')
+User = require '../app/models/user'
 serverUrl = 'http://localhost:8100'
 
 before (done) ->
-  user = new User { email: 'valid@user.com', password: '123password' }
-  user.save (error) ->
-    throw error if error
-    done()
+  User.remove ->
+    user = new User { email: 'valid@user.com', password: '123password' }
+    user.save (error) ->
+      throw error if error
+      done()
 
 
 after (done) ->
-  User.collection.remove (error, user) ->
+  User.remove ->
     done()
 
 describe 'root path', ->
@@ -83,7 +83,7 @@ describe 'signup path', ->
     agent = superagent.agent()
 
     agent
-      .post 'http://localhost:8100/signup'
+      .post "#{serverUrl}/signup"
       .send email: 'valid@user.com', password: 'whatever'
       .end (err, res) ->
         res.text.should.include 'already taken'
@@ -93,8 +93,21 @@ describe 'signup path', ->
     agent = superagent.agent()
 
     agent
-      .post 'http://localhost:8100/signup'
+      .post "#{serverUrl}/signup"
       .send email: 'valid@new-user.com', password: '123password'
       .end (err, res) ->
+        User.find {}, (error, users) ->
+          users.length.should.equal 2 unless error
         res.req.path.should.equal '/home'
+        done()
+
+describe 'sessions path', ->
+
+  it 'should redirect to root path if not logged in', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/session/create"
+      .end (err, res) ->
+        res.req.path.should.equal '/'
         done()

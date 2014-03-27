@@ -30,6 +30,10 @@ module.exports = (app, passport) ->
     res.render('home.jade', { user: req.user })
   )
 
+  app.post('/session/create', (req, res) ->
+    res.redirect('/home')
+  )
+
 isLoggedIn = (req, res, next) ->
   return next() if req.isAuthenticated()
   res.redirect('/')
