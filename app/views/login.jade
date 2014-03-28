@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1 Good call, you should totally log in :-)
+  h2 Good call, you should totally log in
 
   form(action="/login" method="post")
 
@@ -14,6 +14,8 @@ block content
     label Password
     input(type="password" name="password")
 
-    button(type="submit") Login
+    button(type="submit") Log in
 
-  p Or, you know, maybe you should <a href="/signup">signup</a>?
+  p Or, you know, maybe you should <a href="/signup">sign up</a>?
+
+  p No shame in going <a href="/">home</a> either.
