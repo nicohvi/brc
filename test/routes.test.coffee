@@ -25,10 +25,6 @@ describe 'root path', ->
       .expect(200, done)
 
 describe 'login path', ->
-  it 'should return status 200 OK', (done) ->
-    request(app)
-      .get '/login'
-      .expect(200, done)
 
   it 'should return 302 for missing login credentials', (done) ->
     request(app)
@@ -69,11 +65,6 @@ describe 'login path', ->
 
 describe 'signup path', ->
 
-  it 'should return status 200 OK', (done) ->
-    request(app)
-      .get '/signup'
-      .expect(200, done)
-
   it 'should return 302 for missing credentials', (done) ->
     request(app)
       .post '/signup'
@@ -111,3 +102,16 @@ describe 'sessions path', ->
       .end (err, res) ->
         res.req.path.should.equal '/'
         done()
+
+  it 'should redirect to home when the user is logged in', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/login"
+      .send email: 'valid@user.com', password: '123password'
+      .end (err, res) ->
+        agent
+          .post "#{serverUrl}/session/create"
+          .end (err, res) ->
+            res.req.path.should.equal '/home'
+            done()
