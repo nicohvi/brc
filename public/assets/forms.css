@@ -1,0 +1,35 @@
+button,
+input {
+  font-size: 1em;
+}
+.form-row {
+  display: flex;
+}
+.form-element {
+  display: flex;
+  margin-bottom: 1em;
+  flex: 1;
+}
+.form-element:last-child {
+  padding-left: 1.4em;
+}
+.form-element input {
+  flex: 1;
+  border: 1px solid rgba(147,128,108,0.25);
+  padding: 0.5em 0.75em;
+  margin: 0;
+}
+.form-element aside {
+  border: 1px solid rgba(147,128,108,0.25);
+  padding: 0.5em 0.75em;
+  color: #666;
+  background-color: rgba(147,128,108,0.1);
+  border-radius: 2px 0 0 2px;
+}
+button {
+  border: 1px solid rgba(147,128,108,0.25);
+  padding: 0.5em 0.75em;
+  color: #666;
+  background-color: rgba(147,128,108,0.1);
+  border-radius: 2px 0 0 2px;
+}

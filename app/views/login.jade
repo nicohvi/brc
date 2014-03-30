@@ -8,11 +8,16 @@ block content
     if message.length > 0
       div.alert #{message}
 
-    label Email
-    input(type="text" name="email" placeholder="derp@derp.com")
+    section.form-row
+      section.form-element
+        aside
+          i.fa.fa-envelope
+        input(type="text" name="email" placeholder="derp@derp.com")
 
-    label Password
-    input(type="password" name="password")
+      section.form-element
+        aside
+          i.fa.fa-lock
+        input(type="password" name="password")
 
     button(type="submit") Log in
 
