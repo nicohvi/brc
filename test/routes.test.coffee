@@ -3,19 +3,22 @@ superagent = require 'superagent'
 should = require 'should'
 app = require('../server')(8100, 'test')
 User = require '../app/models/user'
+IRCProxy = require '../app/models/irc-proxy'
 serverUrl = 'http://localhost:8100'
 
 before (done) ->
-  User.remove ->
-    user = new User { email: 'valid@user.com', password: '123password' }
-    user.save (error) ->
-      throw error if error
-      done()
+  IRCProxy.remove ->
+    User.remove ->
+      user = new User { email: 'valid@user.com', password: '123password' }
+      user.save (error) ->
+        throw error if error
+        done()
 
 
 after (done) ->
-  User.remove ->
-    done()
+  IRCProxy.remove ->
+    User.remove ->
+      done()
 
 describe 'root path', ->
 
@@ -94,7 +97,7 @@ describe 'signup path', ->
 
 describe 'irc-config path', ->
 
-  it 'should return 401 for submitting empty form', (done) ->
+  it 'should return 400 for submitting empty form', (done) ->
     agent = superagent.agent()
 
     agent
@@ -104,6 +107,21 @@ describe 'irc-config path', ->
         agent
           .post "#{serverUrl}/irc-config"
           .end (err, res) ->
-            res.status.should.equal 401
+            res.status.should.equal 400
             res.text.should.include 'empty form'
             done()
+
+  it 'should return the User to the home path with the updated nick', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/login"
+      .send email: 'valid@user.com', password: '123password'
+      .end (err, res) ->
+        agent
+        .post "#{serverUrl}/irc-config"
+        .send nick: 'RetardedBear'
+        .end (err, res) ->
+          res.status.should.equal 200
+          res.text.should.include 'RetardedBear, huh?'
+          done()

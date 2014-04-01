@@ -28,6 +28,16 @@ h2 {
   vertical-align: middle;
   margin-left: 1.5em;
 }
+.alert {
+  transition: opacity 0.5s;
+  cursor: pointer;
+}
+.hidden {
+  opacity: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .user {
   color: #f00;
 }

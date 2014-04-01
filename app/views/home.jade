@@ -6,4 +6,19 @@ block content
 
   p You have totally logged in, <span class="user">#{user.email}</span>.
 
-  
+  if ircProxy
+    p Cool, you have a proxy. Might be an idea to change the nick though,
+      #{ircProxy.nick} isn't very cool.
+  else
+    p Hey dude, you should totally get an IRC proxy
+
+  form(action="/irc-config" method="post" id="irc-config")
+
+    div.alert.hidden
+
+    section.form-row
+      section.form-element(style="padding-left:0;")
+        aside
+          i.fa.fa-user
+        input(type="text" name="nick" placeholder="Your cool IRC nick")
+        aside.button.confirm Confirm

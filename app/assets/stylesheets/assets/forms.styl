@@ -1,6 +1,18 @@
 button, input
   font-size: 1em
-  
+
+.alert
+  background-color: #dd5858
+  color: #fff
+  font-family: Verdana, sans-Serif
+  font-size: .8em
+
+  &:not(.hidden)
+    padding: .75em
+    margin-bottom: 0.8em
+    border: 1px solid rgba(147,128,108,0.25)
+    border-radius: 2px
+
 .form-row
   display: flex
 
@@ -8,6 +20,7 @@ button, input
   display: flex
   margin-bottom: 1em
   flex: 1
+  font-family: Verdana, sans-Serif
 
   &:last-child
     padding-left: 1.4em
@@ -17,6 +30,8 @@ button, input
     border: 1px solid rgba(147,128,108,.25)
     padding: .5em .75em
     margin: 0
+    border-left: 0
+    border-right: 0
 
   aside
     border: 1px solid rgba(147, 128, 108, .25)
@@ -24,6 +39,9 @@ button, input
     color: #666
     background-color: rgba(147,128,108,.1)
     border-radius: 2px 0 0 2px
+
+    &.button
+      cursor: pointer
 
 button
   border: 1px solid rgba(147,128,108,0.25);

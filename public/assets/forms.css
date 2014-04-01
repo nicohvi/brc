@@ -2,6 +2,18 @@ button,
 input {
   font-size: 1em;
 }
+.alert {
+  background-color: #dd5858;
+  color: #fff;
+  font-family: Verdana, sans-Serif;
+  font-size: 0.8em;
+}
+.alert:not(.hidden) {
+  padding: 0.75em;
+  margin-bottom: 0.8em;
+  border: 1px solid rgba(147,128,108,0.25);
+  border-radius: 2px;
+}
 .form-row {
   display: flex;
 }
@@ -9,6 +21,7 @@ input {
   display: flex;
   margin-bottom: 1em;
   flex: 1;
+  font-family: Verdana, sans-Serif;
 }
 .form-element:last-child {
   padding-left: 1.4em;
@@ -18,6 +31,8 @@ input {
   border: 1px solid rgba(147,128,108,0.25);
   padding: 0.5em 0.75em;
   margin: 0;
+  border-left: 0;
+  border-right: 0;
 }
 .form-element aside {
   border: 1px solid rgba(147,128,108,0.25);
@@ -25,6 +40,9 @@ input {
   color: #666;
   background-color: rgba(147,128,108,0.1);
   border-radius: 2px 0 0 2px;
+}
+.form-element aside.button {
+  cursor: pointer;
 }
 button {
   border: 1px solid rgba(147,128,108,0.25);

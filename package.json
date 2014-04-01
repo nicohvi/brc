@@ -27,6 +27,7 @@
     "grunt-mocha-test": "*",
     "grunt-contrib-watch": "*",
     "coffee-script": "*",
-    "grunt-newer": "~0.7.0"
+    "grunt-newer": "~0.7.0",
+    "grunt-contrib-coffee": "~0.10.1"
   }
 }
