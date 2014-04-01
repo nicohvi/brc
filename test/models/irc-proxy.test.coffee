@@ -4,7 +4,6 @@ should = require 'should'
 app = require('../../server')(8100, 'test')
 User = require '../../app/models/user'
 IRCProxy = require '../../app/models/irc-proxy'
-serverUrl = 'http://localhost:8100'
 
 before (done) ->
   IRCProxy.remove ->
@@ -23,7 +22,7 @@ after (done) ->
     IRCProxy.remove ->
       done()
 
-describe 'proxy creation', ->
+describe 'IRCProxy model', ->
 
   it 'should not create an IRC proxy without a user', (done) ->
     ircProxy = new IRCProxy()

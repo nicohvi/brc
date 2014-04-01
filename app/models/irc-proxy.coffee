@@ -7,13 +7,16 @@ ircProxySchema = Schema
     ref: 'User',
     required: true,
     unique: true
-  history: [serverSchema]
+  nick: String
+  servers: [serverSchema]
 
 serverSchema = Schema
+  url: String
   channels: [channelSchema]
 
 channelSchema = Schema
-   messages: [messageSchema]
+  name: String
+  history: [messageSchema]
 
 messageSchema = Schema
   from: String,

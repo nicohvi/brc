@@ -30,8 +30,10 @@ module.exports = (app, passport) ->
     res.render('home.jade', { user: req.user })
   )
 
-  app.post('/session/create', (req, res) ->
-    res.redirect('/home')
+  app.post('/irc-config', isLoggedIn, (req, res) ->
+    unless req.body.nick
+      res.status 401
+      res.send { message: 'Don\'t just submit an empty form, brah' }
   )
 
 isLoggedIn = (req, res, next) ->

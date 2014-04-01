@@ -91,3 +91,19 @@ describe 'signup path', ->
           users.length.should.equal 2 unless error
         res.req.path.should.equal '/home'
         done()
+
+describe 'irc-config path', ->
+
+  it 'should return 401 for submitting empty form', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/login"
+      .send email: 'valid@user.com', password: '123password'
+      .end (err, res) ->
+        agent
+          .post "#{serverUrl}/irc-config"
+          .end (err, res) ->
+            res.status.should.equal 401
+            res.text.should.include 'empty form'
+            done()
