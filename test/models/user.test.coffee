@@ -1,8 +1,8 @@
 should = require 'should'
-app = require('../server')(8100, 'test')
-User = require '../app/models/user'
+app = require('../../server')(8100, 'test')
+User = require '../../app/models/user'
 util = require 'util'
-tools = require './tools'
+tools = require '../support/tools'
 
 describe 'User model', ->
 
