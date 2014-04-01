@@ -1,18 +1,18 @@
 bcrypt = require 'bcrypt-nodejs'
-util = require 'util'
 mongoose = require 'mongoose'
 
-userSchema = mongoose.Schema {
-  email: {
+userSchema = mongoose.Schema
+  email:
     type: String,
     unique: true,
     required: true
-  },
-  password: {
+  ,
+  password:
     type: String,
     required: true
-  }
-}
+  ,
+  
+
 
 # filter called before save. Encrypts the password before it gets
 # stored to the database.
@@ -23,4 +23,4 @@ userSchema.pre 'save', (next) ->
 userSchema.methods.validPassword = (password) ->
     bcrypt.compareSync(password, @password)
 
-module.exports = db.model('User', userSchema);
+module.exports = db.model('User', userSchema)

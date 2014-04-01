@@ -91,27 +91,3 @@ describe 'signup path', ->
           users.length.should.equal 2 unless error
         res.req.path.should.equal '/home'
         done()
-
-describe 'sessions path', ->
-
-  it 'should redirect to root path if not logged in', (done) ->
-    agent = superagent.agent()
-
-    agent
-      .post "#{serverUrl}/session/create"
-      .end (err, res) ->
-        res.req.path.should.equal '/'
-        done()
-
-  it 'should redirect to home when the user is logged in', (done) ->
-    agent = superagent.agent()
-
-    agent
-      .post "#{serverUrl}/login"
-      .send email: 'valid@user.com', password: '123password'
-      .end (err, res) ->
-        agent
-          .post "#{serverUrl}/session/create"
-          .end (err, res) ->
-            res.req.path.should.equal '/home'
-            done()
