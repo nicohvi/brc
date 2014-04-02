@@ -6,18 +6,7 @@ User = require '../app/models/user'
 IRCProxy = require '../app/models/irc-proxy'
 serverUrl = 'http://localhost:8100'
 
-before (done) ->
-  IRCProxy.remove ->
-    User.remove ->
-      user = new User { email: 'valid@user.com', password: '123password' }
-      user.save (error) ->
-        throw error if error
-        done()
-
-after (done) ->
-  IRCProxy.remove ->
-    User.remove ->
-      done()
+require './spec_helper'
 
 describe 'root path', ->
 
@@ -27,6 +16,16 @@ describe 'root path', ->
       .expect(200, done)
 
 describe 'login path', ->
+
+  before (done) ->
+    user = new User { email: 'valid@user.com', password: '123password' }
+    user.save (error) ->
+      throw error if error
+      done()
+
+  after (done) ->
+    User.remove ->
+      done()
 
   it 'should return 302 for missing login credentials', (done) ->
     request(app)
@@ -67,6 +66,16 @@ describe 'login path', ->
 
 describe 'signup path', ->
 
+  before (done) ->
+    user = new User { email: 'valid@user.com', password: '123password' }
+    user.save (error) ->
+      throw error if error
+      done()
+
+  after (done) ->
+    User.remove ->
+      done()
+
   it 'should return 302 for missing credentials', (done) ->
     request(app)
       .post '/signup'
@@ -96,12 +105,18 @@ describe 'signup path', ->
 
 describe 'irc-config path', ->
 
+  before (done) ->
+    user = new User { email: 'valid@user.com', password: '123password' }
+    user.save (error) ->
+      throw error if error
+      done()
+
+  after (done) ->
+    User.remove ->
+      done()
+
   it 'should return 400 for submitting empty form', (done) ->
     agent = superagent.agent()
-
-    IRCProxy.find {}, (error, proxies) ->
-      should.equal(error, null)
-      proxies.length.should.equal 0
 
     agent
       .post "#{serverUrl}/login"
@@ -112,12 +127,9 @@ describe 'irc-config path', ->
           .end (err, res) ->
             res.status.should.equal 400
             res.text.should.include 'empty form'
-            IRCProxy.find {}, (error, proxies) ->
-              should.equal(error, null)
-              proxies.length.should.equal 0
-              done()
+            done()
 
-  it 'should return the User to the home path with the newly created proxy', (done) ->
+  it 'should return 200 when submitting a valid form', (done) ->
     agent = superagent.agent()
 
     agent
@@ -125,10 +137,8 @@ describe 'irc-config path', ->
       .send email: 'valid@user.com', password: '123password'
       .end (err, res) ->
         agent
-        .post "#{serverUrl}/irc-config"
-        .send nick: 'RetardedBear'
-        .end (err, res) ->
-          res.status.should.equal 200
-          res.text.should.include 'Proxy created'
-          res.text.should.include 'RetardedBear'
-          done()
+          .post "#{serverUrl}/irc-config"
+          .send nick: 'SeverinLovaas'
+          .end (err, res) ->
+            res.status.should.equal 200
+            done()

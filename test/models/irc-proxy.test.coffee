@@ -5,24 +5,23 @@ app = require('../../server')(8100, 'test')
 User = require '../../app/models/user'
 IRCProxy = require '../../app/models/irc-proxy'
 
-before (done) ->
-  IRCProxy.remove ->
-    User.remove ->
-      user = new User { email: 'valid@user.com', password: '123password' }
-      user.save (error) ->
-        throw error if error
-        done()
+require '../spec_helper'
 
-afterEach (done) ->
-  IRCProxy.remove ->
-    done()
+describe 'IRCProxy model', ->
 
-after (done) ->
-  User.remove ->
+  before (done) ->
+    user = new User { email: 'valid@user.com', password: '123password' }
+    user.save (error) ->
+      throw error if error
+      done()
+
+  afterEach (done) ->
     IRCProxy.remove ->
       done()
 
-describe 'IRCProxy model', ->
+  after (done) ->
+    User.remove ->
+      done()
 
   it 'should not create an IRC proxy without a user', (done) ->
     ircProxy = new IRCProxy()

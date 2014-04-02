@@ -1,12 +1,15 @@
 should = require 'should'
 app = require('../../server')(8100, 'test')
 User = require '../../app/models/user'
+IRCProxy = require '../../app/models/irc-proxy'
 util = require 'util'
 tools = require '../support/tools'
 
+require '../spec_helper'
+
 describe 'User model', ->
 
-  beforeEach (done) ->
+  after (done) ->
     User.remove ->
       done()
 

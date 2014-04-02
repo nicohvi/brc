@@ -30,17 +30,15 @@ module.exports = (app, passport) ->
   )
 
   app.get('/home', isLoggedIn, (req, res) ->
-    res.render('home.jade', { user: req.user })
+    res.render 'home.jade', { user: req.user }
   )
 
   app.post('/irc-config', isLoggedIn, (req, res) ->
     if req.body.nick?
-      User.findOne(req.user.email, (error, user) ->
+      User.findOne( { email: req.user.email }, (error, user) ->
         user.getIrcProxy (error, proxy) ->
           return handleError(res, error) if error
           if proxy?
-            console.log "proxy exists\n"
-            console.log util.inspect(proxy)
             proxy.nick = req.body.nick
             proxy.save (error) ->
               return handleError(res, error) if error
