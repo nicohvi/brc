@@ -1,5 +1,6 @@
 bcrypt = require 'bcrypt-nodejs'
 mongoose = require 'mongoose'
+IRCProxy = require './irc-proxy'
 
 userSchema = mongoose.Schema
   email:
@@ -17,6 +18,18 @@ userSchema.pre 'save', (next) ->
   next()
 
 userSchema.methods.validPassword = (password) ->
-    bcrypt.compareSync(password, @password)
+  bcrypt.compareSync(password, @password)
 
-module.exports = db.model('User', userSchema)
+userSchema.methods.getIrcProxy = (done) ->
+  IRCProxy.findOne( { _user: @._id }, (error, proxy) ->
+      return done(error, null) if error
+      done(null,proxy)
+  ) # findOne
+
+userSchema.methods.createProxy = (done) ->
+  ircProxy = new IRCProxy { _user: @._id }
+  ircProxy.save (error) ->
+    done(error, null) if error
+    done(null, ircProxy)
+
+module.exports = User = db.model('User', userSchema)

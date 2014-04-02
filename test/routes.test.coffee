@@ -14,7 +14,6 @@ before (done) ->
         throw error if error
         done()
 
-
 after (done) ->
   IRCProxy.remove ->
     User.remove ->
@@ -100,6 +99,10 @@ describe 'irc-config path', ->
   it 'should return 400 for submitting empty form', (done) ->
     agent = superagent.agent()
 
+    IRCProxy.find {}, (error, proxies) ->
+      should.equal(error, null)
+      proxies.length.should.equal 0
+
     agent
       .post "#{serverUrl}/login"
       .send email: 'valid@user.com', password: '123password'
@@ -109,9 +112,12 @@ describe 'irc-config path', ->
           .end (err, res) ->
             res.status.should.equal 400
             res.text.should.include 'empty form'
-            done()
+            IRCProxy.find {}, (error, proxies) ->
+              should.equal(error, null)
+              proxies.length.should.equal 0
+              done()
 
-  it 'should return the User to the home path with the updated nick', (done) ->
+  it 'should return the User to the home path with the newly created proxy', (done) ->
     agent = superagent.agent()
 
     agent
@@ -123,5 +129,6 @@ describe 'irc-config path', ->
         .send nick: 'RetardedBear'
         .end (err, res) ->
           res.status.should.equal 200
-          res.text.should.include 'RetardedBear, huh?'
+          res.text.should.include 'Proxy created'
+          res.text.should.include 'RetardedBear'
           done()

@@ -11,6 +11,7 @@ $ ->
 
     $.ajax(options)
       .done( (data) ->
+        $for
       )
       .fail( (jqXHR) ->
         options.error(jqXHR.responseJSON)

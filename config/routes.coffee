@@ -1,5 +1,5 @@
 User = require '../app/models/user'
-IRCProxy = require '../app/models/irc-proxy'
+util = require 'util'
 
 module.exports = (app, passport) ->
 
@@ -34,20 +34,34 @@ module.exports = (app, passport) ->
   )
 
   app.post('/irc-config', isLoggedIn, (req, res) ->
-    unless req.body.nick
+    if req.body.nick?
+      User.findOne(req.user.email, (error, user) ->
+        user.getIrcProxy (error, proxy) ->
+          return handleError(res, error) if error
+          if proxy?
+            console.log "proxy exists\n"
+            console.log util.inspect(proxy)
+            proxy.nick = req.body.nick
+            proxy.save (error) ->
+              return handleError(res, error) if error
+              res.send { message: 'Proxy updated.', proxy: proxy }
+          else
+            user.createProxy (error, proxy) ->
+              return handleError(res, error) if error
+              proxy.nick = req.body.nick
+              proxy.save (error) ->
+                handleError(error) if error
+                res.send { message: 'Proxy created.', proxy: proxy }
+    ) # findOne
+    else
       res.status 400
       res.send { message: 'Don\'t just submit an empty form, brah' }
-
-    user = User.findOne({ email: req.user.email }, (error, user) ->
-      throw error if error
-      ircProxy = new IRCProxy { _user: user._id, nick: req.body.nick }
-      ircProxy.save (error, proxy) ->
-        throw error if error
-        res.send { message: 'Proxy created', proxy: proxy }
-    ) # findOne
-
-  )
+  ) # post
 
 isLoggedIn = (req, res, next) ->
   return next() if req.isAuthenticated()
   res.redirect('/')
+
+handleError = (res, error) ->
+  res.status 400
+  res.send { message: error }
