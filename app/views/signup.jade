@@ -5,16 +5,21 @@ block content
 
   form(action="/signup" method="post")
 
-      if message.length > 0
-        div.alert #{message}
+    if message.length > 0
+      div.alert #{message}
 
-      label Email
-      input(type="text" name="email" placeholder="derp@derp.com")
+    section.form-row
+      section.form-element
+        aside
+          i.fa.fa-envelope
+        input(type="text" name="email" placeholder="derp@derp.com")
 
-      label Password
-      input(type="password" name="password")
+      section.form-element
+        aside
+          i.fa.fa-lock
+        input(type="password" name="password")
 
-      button(type="submit") Sign up
+    button(type="submit") Sign up
 
   p Or, you know, maybe you should <a href="/login">log in</a>?
 
