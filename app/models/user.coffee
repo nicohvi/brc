@@ -1,6 +1,7 @@
 bcrypt = require 'bcrypt-nodejs'
 mongoose = require 'mongoose'
 IRCProxy = require './irc-proxy'
+util = require 'util'
 
 userSchema = mongoose.Schema
   email:
@@ -22,6 +23,7 @@ userSchema.methods.validPassword = (password) ->
 
 userSchema.methods.getIrcProxy = (done) ->
   IRCProxy.findOne( { _user: @._id }, (error, proxy) ->
+    if done?
       return done(error, null) if error
       done(null,proxy)
   ) # findOne

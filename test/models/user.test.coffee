@@ -35,3 +35,16 @@ describe 'User model', ->
         users.length.should.equal 1
         users[0].email.should.equal 'valid@user.com'
         done()
+
+  it 'should return the name of the User\'s Proxy', (done) ->
+    User.findOne( { email: 'valid@user.com' }, (error, user) ->
+      throw error if error
+      ircProxy = new IRCProxy { _user: user._id, nick: 'SeverinLovaas' }
+      ircProxy.save (error) ->
+        throw error if error
+        user.getIrcProxy( (error, proxy) ->
+          throw error if error
+          proxy.nick.should.equal ircProxy.nick
+          done()
+        ) # getIrcProxy
+    ) # findOne

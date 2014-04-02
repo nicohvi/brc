@@ -47,5 +47,19 @@ describe 'Proxy creation', ->
           res.text.should.include 'RetardedBear'
           done()
 
-  # it 'should update the existing proxy for the logged in User when one exists', (done) ->
-    # done()
+  it 'should update the existing proxy for the logged in User when one exists', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/login"
+      .send email: 'valid@user.com', password: '123password'
+      .end (err, res) ->
+        res.text.should.include 'valid@user.com'
+        agent
+        .post "#{serverUrl}/irc-config"
+        .send nick: 'RetardedBear'
+        .end (err, res) ->
+          res.status.should.equal 200
+          res.text.should.include 'Proxy updated'
+          res.text.should.include 'RetardedBear'
+          done()

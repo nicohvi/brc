@@ -6,9 +6,8 @@ block content
 
   p You have totally logged in, <span class="user">#{user.email}</span>.
 
-  if ircProxy
-    p Cool, you have a proxy. Might be an idea to change the nick though,
-      #{ircProxy.nick} isn't very cool.
+  if proxy
+    p Cool, you have a proxy. Might be an idea to change the nick though, <span class="irc-nick">#{proxy.nick}</span> isn't very cool.
   else
     p Hey dude, you should totally get an IRC proxy
 
