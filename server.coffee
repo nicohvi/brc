@@ -5,6 +5,7 @@ module.exports = (port, env) ->
   port = port || 8000
   passport = require 'passport'
   flash = require 'connect-flash'
+  RedisStore = require('connect-redis')(express)
   config = require './config/config'
   stylus = require 'stylus'
 
@@ -28,7 +29,21 @@ module.exports = (port, env) ->
     # set environment variables
     app.use express.cookieParser()
     app.use express.bodyParser()
-    app.use express.session({ secret: 'troll dog' })
+
+    # use redis for session persistance to keep user logged in between
+    # app restarts.
+    app.use express.session {
+      secret: 'troll dog',
+      store: new RedisStore {
+        host: config.redis.host,
+        port: config.redis.port,
+        user: config.redis.username,
+        pass: config.redis.password
+      },
+      cookie: {
+        maxAge: 604800 # one week
+      }
+    }
 
     app.use passport.initialize()
     app.use passport.session()
