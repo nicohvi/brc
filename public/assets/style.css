@@ -42,7 +42,15 @@ p {
   padding: 0;
 }
 .user {
-  color: #f00;
+  color: #dd5858;
+}
+.irc-nick {
+  background: #dd5858;
+  box-sizing: border-box;
+  display: inline-block;
+  color: #fff;
+  padding: 0.2em 0.4em;
+  border-radius: 20px;
 }
 @media (max-width: 800px) {
   .content {

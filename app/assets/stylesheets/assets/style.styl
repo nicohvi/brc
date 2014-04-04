@@ -1,3 +1,6 @@
+// global variables
+$red = #dd5858
+
 body
   background-color: whiteSmoke
   font-family: Georgia, serif
@@ -42,7 +45,15 @@ p
 
 // Typography-styling
 .user
-  color: red
+  color: $red
+
+.irc-nick
+  background: $red
+  box-sizing: border-box
+  display: inline-block
+  color: #fff
+  padding: .2em .4em
+  border-radius: 20px
 
 // Media queries
 @media(max-width: 800px)
