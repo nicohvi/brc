@@ -1,4 +1,4 @@
-extends layout
+extends layout/layout
 
 block content
   h1 Welcome to BRC
@@ -6,5 +6,4 @@ block content
   p Please, do not be intimidated by the bear, he's a real friendly guy.
     <img class="logo-paragraph" src="/assets/bear.png"/>
 
-
-  p You should totally <a href="/login">log in</a>.
+  include partials/_login

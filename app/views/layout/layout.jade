@@ -10,5 +10,8 @@ html
     script(src='/assets/application.js')
 
   body
+    if user
+      include header
+
     section.content
       block content

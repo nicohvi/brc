@@ -1,14 +1,15 @@
 root = exports ? this
 
-class HomeView #extends view
+class HomeView
 
   constructor: (@events) ->
     @view = $('#content')
     @form = $('#irc-config')
     @events.addListener "irc_proxy:submit:success", (response) =>
+      @.clearErrors()
       @.updateView(response)
     @events.addListener "irc_proxy:submit:error", (error) =>
-      @.updateView(error)
+      @.showError(error)
     @.initBindings()
 
   initBindings: ->
@@ -20,6 +21,15 @@ class HomeView #extends view
 
     @form.find('.confirm').on 'click', (event) =>
       @.submitForm()
+
+    $('.alert').on 'click', (event) ->
+      $(@).html('').addClass('hidden')
+
+  showError: (error) ->
+    @form.find('.alert').removeClass('hidden').html(error.message)
+
+  clearErrors: ->
+    @form.find('.alert').html('').addClass('hidden')
 
   updateView: (data) ->
     debugger
@@ -34,7 +44,7 @@ class HomeView #extends view
 
     $.ajax(options)
       .done (data) =>   @events.emit "irc_proxy:submit:success", data
-      .fail (jqXHR) =>  @events.emit "irc_proxy:submit:error", jqXHR
+      .fail (jqXHR) =>  @events.emit "irc_proxy:submit:error", jqXHR.responseJSON
 
 
 root.HomeView = HomeView

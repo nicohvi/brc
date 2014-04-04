@@ -62,12 +62,13 @@
       this.form = $('#irc-config');
       this.events.addListener("irc_proxy:submit:success", (function(_this) {
         return function(response) {
+          _this.clearErrors();
           return _this.updateView(response);
         };
       })(this));
       this.events.addListener("irc_proxy:submit:error", (function(_this) {
         return function(error) {
-          return _this.updateView(error);
+          return _this.showError(error);
         };
       })(this));
       this.initBindings();
@@ -86,11 +87,22 @@
           }
         };
       })(this));
-      return this.form.find('.confirm').on('click', (function(_this) {
+      this.form.find('.confirm').on('click', (function(_this) {
         return function(event) {
           return _this.submitForm();
         };
       })(this));
+      return $('.alert').on('click', function(event) {
+        return $(this).html('').addClass('hidden');
+      });
+    };
+
+    HomeView.prototype.showError = function(error) {
+      return this.form.find('.alert').removeClass('hidden').html(error.message);
+    };
+
+    HomeView.prototype.clearErrors = function() {
+      return this.form.find('.alert').html('').addClass('hidden');
     };
 
     HomeView.prototype.updateView = function(data) {
@@ -111,7 +123,7 @@
         };
       })(this)).fail((function(_this) {
         return function(jqXHR) {
-          return _this.events.emit("irc_proxy:submit:error", jqXHR);
+          return _this.events.emit("irc_proxy:submit:error", jqXHR.responseJSON);
         };
       })(this));
     };

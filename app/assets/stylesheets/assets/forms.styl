@@ -1,6 +1,9 @@
 button, input
   font-size: 1em
 
+input:disabled
+  cursor: not-allowed
+
 .alert
   background-color: #dd5858
   color: #fff
@@ -22,7 +25,7 @@ button, input
   flex: 1
   font-family: Verdana, sans-Serif
 
-  &:last-child
+  &:nth-of-type(2n)
     padding-left: 1.4em
 
   input
@@ -31,7 +34,10 @@ button, input
     padding: .5em .75em
     margin: 0
     border-left: 0
-    border-right: 0
+
+    &.double-button
+      border-right:0
+
 
   aside
     border: 1px solid rgba(147, 128, 108, .25)

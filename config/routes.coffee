@@ -4,7 +4,7 @@ util = require 'util'
 module.exports = (app, passport) ->
 
   app.get('/', (req, res) ->
-    res.render 'index.jade'
+    res.render 'index.jade', { message: req.flash 'loginMessage' }
   )
 
   app.get('/signup', (req, res) ->
@@ -18,15 +18,17 @@ module.exports = (app, passport) ->
       }) # authenticate
   )
 
-  app.get('/login', (req, res) ->
-    res.render('login.jade', { message: req.flash 'loginMessage' })
-  )
-
   app.post('/login', passport.authenticate('local-login', {
       successRedirect: '/home',
-      failureRedirect: '/login',
+      failureRedirect: '/',
       failureFlash: true
     }) # authenticate
+  )
+
+  app.get('/logout', (req, res) ->
+    req.session.destroy(
+      res.redirect '/'
+    )
   )
 
   app.get('/home', isLoggedIn, (req, res) ->

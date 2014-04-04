@@ -1,0 +1,13 @@
+section#irc-proxy
+  h3 IRC proxy
+
+  form(action="/irc-config" method="post" id="irc-config")
+
+    div.alert.hidden
+
+    section.form-row
+      section.form-element(style="padding-left:0;")
+        aside Nick
+        input(type="text" name="nick" value="#{proxy.nick}" disabled)
+        aside
+          i.fa.fa-lock

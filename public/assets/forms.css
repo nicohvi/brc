@@ -2,6 +2,9 @@ button,
 input {
   font-size: 1em;
 }
+input:disabled {
+  cursor: not-allowed;
+}
 .alert {
   background-color: #dd5858;
   color: #fff;
@@ -23,7 +26,7 @@ input {
   flex: 1;
   font-family: Verdana, sans-Serif;
 }
-.form-element:last-child {
+.form-element:nth-of-type(2n) {
   padding-left: 1.4em;
 }
 .form-element input {
@@ -32,6 +35,8 @@ input {
   padding: 0.5em 0.75em;
   margin: 0;
   border-left: 0;
+}
+.form-element input.double-button {
   border-right: 0;
 }
 .form-element aside {

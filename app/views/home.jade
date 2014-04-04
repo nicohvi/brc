@@ -1,4 +1,4 @@
-extends layout
+extends layout/layout
 
 block content
   h2 Good on you!
@@ -6,8 +6,8 @@ block content
   p You have totally logged in, <span class="user">#{user.email}</span>.
 
   if proxy
-    p Cool, you have a proxy. Might be an idea to change the nick though, <span class="irc-nick">#{proxy.nick}</span> isn't very cool.
+    p Cool, you have a proxy - these are the stored attributes:
+    include partials/_irc-proxy
   else
     p Hey dude, you should totally get an IRC proxy
-
-  include partials/_irc-form
+    include partials/_irc-form
