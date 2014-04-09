@@ -4,16 +4,22 @@ button, input
 input:disabled
   cursor: not-allowed
 
-.alert
-  background-color: #dd5858
+.message
   color: #fff
   font-family: Verdana, sans-Serif
   font-size: .8em
+  cursor: pointer
+
+  &.alert
+    background-color: #dd5858
+    border: 1px solid rgba(147,128,108,0.25)
+
+  &.notice
+    background-color: #3d9970
 
   &:not(.hidden)
     padding: .75em
     margin-bottom: 0.8em
-    border: 1px solid rgba(147,128,108,0.25)
     border-radius: 2px
 
 .form-row

@@ -5,16 +5,22 @@ input {
 input:disabled {
   cursor: not-allowed;
 }
-.alert {
-  background-color: #dd5858;
+.message {
   color: #fff;
   font-family: Verdana, sans-Serif;
   font-size: 0.8em;
+  cursor: pointer;
 }
-.alert:not(.hidden) {
+.message.alert {
+  background-color: #dd5858;
+  border: 1px solid rgba(147,128,108,0.25);
+}
+.message.notice {
+  background-color: #3d9970;
+}
+.message:not(.hidden) {
   padding: 0.75em;
   margin-bottom: 0.8em;
-  border: 1px solid rgba(147,128,108,0.25);
   border-radius: 2px;
 }
 .form-row {

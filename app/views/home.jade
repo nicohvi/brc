@@ -3,6 +3,9 @@ extends layout/layout
 block content
   h2 Good on you!
 
+  if message.length > 0
+    div.message.notice #{message}
+
   p You have totally logged in, <span class="user">#{user.email}</span>.
 
   if proxy

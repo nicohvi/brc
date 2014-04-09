@@ -41,16 +41,6 @@
 }).call(this);
 
 (function() {
-
-
-}).call(this);
-
-(function() {
-
-
-}).call(this);
-
-(function() {
   var HomeView, root;
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
@@ -92,7 +82,7 @@
           return _this.submitForm();
         };
       })(this));
-      return $('.alert').on('click', function(event) {
+      return $('.message').on('click', function(event) {
         return $(this).html('').addClass('hidden');
       });
     };

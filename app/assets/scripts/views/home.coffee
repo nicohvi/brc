@@ -22,7 +22,7 @@ class HomeView
     @form.find('.confirm').on 'click', (event) =>
       @.submitForm()
 
-    $('.alert').on 'click', (event) ->
+    $('.message').on 'click', (event) ->
       $(@).html('').addClass('hidden')
 
   showError: (error) ->
