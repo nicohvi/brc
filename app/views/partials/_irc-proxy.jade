@@ -6,8 +6,8 @@ section#irc-proxy
     div.message.alert.hidden
 
     section.form-row
-      section.form-element(style="padding-left:0;")
+      section.form-element
         aside Nick
         input.double-button(type="text" name="nick" value="#{proxy.nick}" disabled)
-        aside
+        aside.lock
           i.fa.fa-lock

@@ -25,14 +25,31 @@ class HomeView
     $('.message').on 'click', (event) ->
       $(@).html('').addClass('hidden')
 
+    $('input[name=nick] + .lock').on 'click', (event) ->
+      $input = $(@).prev()
+      $input.attr('disabled', (idx, oldAttr) -> !oldAttr)
+      $(@).find('i').toggleClass('fa-lock fa-unlock-alt')
+      $input.focus() unless $input.attr('disabled')
+
   showError: (error) ->
-    @form.find('.alert').removeClass('hidden').html(error.message)
+    @form.find('.message').addClass('alert').removeClass('hidden').html(error.message)
 
   clearErrors: ->
-    @form.find('.alert').html('').addClass('hidden')
+    @form.find('.message').html('').removeClass('alert').addClass('hidden')
 
   updateView: (data) ->
-    debugger
+    @form.find('.message').addClass('notice').removeClass('hidden').html(data.message)
+    @.updateForm(data.proxy)
+    @.lockForm()
+
+  updateForm: (proxy) ->
+    for key, value of proxy
+      $("input[name=#{key}]").val(value)
+
+  lockForm: ->
+    _.each $('.lock'), (element, index) ->
+      $(element).find('i').removeClass('fa-unlock-alt').addClass('fa-lock')
+      $(element).prev().attr('disabled', true)
 
   submitForm: ->
     data = @form.find('input').serialize()

@@ -82,21 +82,51 @@
           return _this.submitForm();
         };
       })(this));
-      return $('.message').on('click', function(event) {
+      $('.message').on('click', function(event) {
         return $(this).html('').addClass('hidden');
+      });
+      return $('input[name=nick] + .lock').on('click', function(event) {
+        var $input;
+        $input = $(this).prev();
+        $input.attr('disabled', function(idx, oldAttr) {
+          return !oldAttr;
+        });
+        $(this).find('i').toggleClass('fa-lock fa-unlock-alt');
+        if (!$input.attr('disabled')) {
+          return $input.focus();
+        }
       });
     };
 
     HomeView.prototype.showError = function(error) {
-      return this.form.find('.alert').removeClass('hidden').html(error.message);
+      return this.form.find('.message').addClass('alert').removeClass('hidden').html(error.message);
     };
 
     HomeView.prototype.clearErrors = function() {
-      return this.form.find('.alert').html('').addClass('hidden');
+      return this.form.find('.message').html('').removeClass('alert').addClass('hidden');
     };
 
     HomeView.prototype.updateView = function(data) {
-      debugger;
+      this.form.find('.message').addClass('notice').removeClass('hidden').html(data.message);
+      this.updateForm(data.proxy);
+      return this.lockForm();
+    };
+
+    HomeView.prototype.updateForm = function(proxy) {
+      var key, value, _results;
+      _results = [];
+      for (key in proxy) {
+        value = proxy[key];
+        _results.push($("input[name=" + key + "]").val(value));
+      }
+      return _results;
+    };
+
+    HomeView.prototype.lockForm = function() {
+      return _.each($('.lock'), function(element, index) {
+        $(element).find('i').removeClass('fa-unlock-alt').addClass('fa-lock');
+        return $(element).prev().attr('disabled', true);
+      });
     };
 
     HomeView.prototype.submitForm = function() {

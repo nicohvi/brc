@@ -56,6 +56,7 @@ module.exports = (app, passport) ->
           return handleError(res, error) if error
           if proxy?
             proxy.nick = req.body.nick
+            proxy.servers = req.body.servers
             proxy.save (error) ->
               return handleError(res, error) if error
               res.send { message: 'Proxy updated.', proxy: proxy }
@@ -63,6 +64,7 @@ module.exports = (app, passport) ->
             user.createProxy (error, proxy) ->
               return handleError(res, error) if error
               proxy.nick = req.body.nick
+              proxy.servers = req.body.servers
               proxy.save (error) ->
                 handleError(error) if error
                 res.send { message: 'Proxy created.', proxy: proxy }

@@ -57,9 +57,10 @@ describe 'Proxy creation', ->
         res.text.should.include 'valid@user.com'
         agent
         .post "#{serverUrl}/irc-config"
-        .send nick: 'RetardedBear'
+        .send nick: 'RetardedBear', servers: [ { url: 'irc.freenode.net', channels: [ ] } ]
         .end (err, res) ->
           res.status.should.equal 200
           res.text.should.include 'Proxy updated'
           res.text.should.include 'RetardedBear'
+          res.text.should.include 'freenode'
           done()
