@@ -37,3 +37,14 @@ describe 'IRC server schema', ->
         done()
       ) #ircProxy.findOne
     ) # user.findOne
+
+  it 'adds channels to registered servers', (done) ->
+    user = User.findOne( { email: 'valid@user.com' }, (error, user) ->
+      IRCProxy.findOne( { _user: user._id }, (error, proxy) ->
+        proxy.servers[1].channels.push { name: '#nplol', history: [ ] }
+        proxy.save (error) ->
+          proxy.servers[1].channels.length.should.eql 1
+          proxy.servers[1].channels[0].name.should.eql '#nplol'
+          done()
+      ) #ircProxy.findOne
+    ) # user.findOne
