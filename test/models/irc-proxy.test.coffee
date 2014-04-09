@@ -40,6 +40,7 @@ describe 'IRCProxy model', ->
         IRCProxy.find {}, (error, proxies) ->
           should.equal(error, null)
           proxies.length.should.equal 1
+          proxies[0]._user.should.eql user._id
           done()
     ) # findOne
 
