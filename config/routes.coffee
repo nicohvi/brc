@@ -17,12 +17,25 @@ module.exports = (app, passport) ->
         failureFlash: true
       }) # authenticate
   )
+  #
+  # app.post('/login', passport.authenticate('local-login', {
+  #     successRedirect: '/home',
+  #     failureRedirect: '/',
+  #     failureFlash: true
+  #   }) # authenticate
+  # )
 
-  app.post('/login', passport.authenticate('local-login', {
-      successRedirect: '/home',
-      failureRedirect: '/',
-      failureFlash: true
-    }) # authenticate
+  app.post('/login', (req, res, next) ->
+    passport.authenticate('local-login', (error, user, info) ->
+      return next(error) if error
+      if(!user)
+        req.flash('loginMessage', info.message)
+        return res.redirect('/')
+      req.logIn(user, (error) ->
+        return next(error) if error
+        return res.redirect('/home')
+      ) #logIn
+    )(req, res, next)
   )
 
   app.get('/logout', (req, res) ->

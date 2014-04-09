@@ -46,9 +46,9 @@ module.exports = (passport) ->
     },
     (req, email, password, done) ->
       User.findOne({ email: email }, (error, user) ->
-        return done(error, null, req.flash('loginMessage', error)) if error
-        return done(null, false, req.flash('loginMessage', 'Incorrect email address.')) unless user?
-        return done(null, false, req.flash('loginMessage', 'Wrong password, brah.')) unless user.validPassword(password)
+        return done(error) if error
+        return done(null, false, { message: 'That\'s hardly the correct email address.' }) unless user?
+        return done(null, false, { message: 'Wrong password, brah.' }) unless user.validPassword(password)
         # all is well
         return done(null, user)
       ) #findOne

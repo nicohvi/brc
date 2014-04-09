@@ -1,12 +1,12 @@
+spec_helper = require './spec_helper'
+app = spec_helper.app
 request = require 'supertest'
 superagent = require 'superagent'
 should = require 'should'
-app = require('../server')(8100, 'test')
 User = require '../app/models/user'
 IRCProxy = require '../app/models/irc-proxy'
 serverUrl = 'http://localhost:8100'
 
-require './spec_helper'
 
 describe 'root path', ->
 
@@ -39,7 +39,7 @@ describe 'login path', ->
       .post "#{serverUrl}/login"
       .send email: 'invalid@user.com', password: 'whatever'
       .end (err, res) ->
-        res.text.should.include 'Incorrect email address'
+        res.text.should.include 'email address'
         done()
 
   it 'should return error message for password when it is wrong', (done) ->
@@ -102,6 +102,20 @@ describe 'signup path', ->
           users.length.should.equal 2 unless error
         res.req.path.should.equal '/home'
         done()
+
+describe 'logout path', ->
+
+  it 'should log out the current user', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/login"
+      .send email: 'valid@user.com', password: '123password'
+      .end (err, res) ->
+        agent.get "#{serverUrl}/logout"
+        .end (err, res) ->
+          res.req.path.should.equal '/'
+          done()
 
 describe 'irc-config path', ->
 

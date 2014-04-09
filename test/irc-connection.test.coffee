@@ -1,13 +1,13 @@
+require './spec_helper'
+
 request = require 'supertest'
 superagent = require 'superagent'
 should = require 'should'
-app = require('../server')(8100, 'test')
 User = require '../app/models/user'
 IRCProxy = require '../app/models/irc-proxy'
 serverUrl = 'http://localhost:8100'
 util = require 'util'
 
-require './spec_helper'
 
 describe 'Proxy creation', ->
 
