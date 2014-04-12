@@ -6,6 +6,7 @@ class Application
     @eventEmitter = new EventEmitter()
     @views = []
     @views.push new HomeView @eventEmitter
+    @views.push new HeaderView @eventEmitter
 
 class App
 

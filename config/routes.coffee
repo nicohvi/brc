@@ -19,18 +19,19 @@ module.exports = (app, passport) ->
   )
 
   app.post('/login', (req, res, next) ->
-    passport.authenticate('local-login', (error, user, info) ->
-      return next(error) if error
-      if(!user)
-        info.message = 'You forgot to type stuff in the boxes, brah.' if info.message == 'Missing credentials'
-        req.flash('loginMessage', info.message)
-        return res.redirect('/')
-      req.logIn(user, (error) ->
+    passport.authenticate('local-login',
+      { badRequestMessage: 'You forgot to type stuff in the boxes, brah.' }, 
+      (error, user, info) ->
         return next(error) if error
-        req.flash('message', 'Logged in.')
-        return res.redirect('/home')
-      ) #logIn
-    )(req, res, next)
+        if(!user)
+          req.flash('loginMessage', info.message)
+          return res.redirect('/')
+        req.logIn(user, (error) ->
+          return next(error) if error
+          req.flash('message', 'You have totally logged in.')
+          return res.redirect('/home')
+        ) #logIn
+      )(req, res, next)
   )
 
   app.get('/logout', (req, res) ->

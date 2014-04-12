@@ -6,8 +6,6 @@ block content
   if message.length > 0
     div.message.notice #{message}
 
-  p You have totally logged in, <span class="user">#{user.email}</span>.
-
   if proxy
     p Cool, you have a proxy - these are the stored attributes:
     include partials/_irc-proxy

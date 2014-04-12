@@ -8,6 +8,7 @@
       this.eventEmitter = new EventEmitter();
       this.views = [];
       this.views.push(new HomeView(this.eventEmitter));
+      this.views.push(new HeaderView(this.eventEmitter));
     }
 
     return Application;
@@ -37,6 +38,64 @@
   $(function() {
     return App.get();
   });
+
+}).call(this);
+
+(function() {
+  $.fn.titleHover = function() {
+    var $hoverBox, mouseEnter, mouseLeave;
+    if ($('#hoverBox').length > 0) {
+      $hoverBox = $('#hoverBox');
+    } else {
+      $hoverBox = $('<div id="hoverBox"></div>').appendTo('body');
+    }
+    mouseEnter = (function(_this) {
+      return function() {
+        $hoverBox.css({
+          'left': "" + ($(_this).offset().left + 50) + "px",
+          'top': "" + ($(_this).offset().top) + "px"
+        });
+        $hoverBox.html($(_this).data('title'));
+        return $hoverBox.fadeIn();
+      };
+    })(this);
+    mouseLeave = (function(_this) {
+      return function() {
+        return $hoverBox.fadeOut('fast', function() {
+          return $(this).clearQueue();
+        });
+      };
+    })(this);
+    return $(this).hover(function() {
+      return mouseEnter();
+    }, function() {
+      return mouseLeave();
+    });
+  };
+
+}).call(this);
+
+(function() {
+  var HeaderView, root;
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  HeaderView = (function() {
+    function HeaderView(events) {
+      this.events = events;
+      this.view = $('header');
+      this.initBindings();
+    }
+
+    HeaderView.prototype.initBindings = function() {
+      return $(this.view).find('a').titleHover();
+    };
+
+    return HeaderView;
+
+  })();
+
+  root.HeaderView = HeaderView;
 
 }).call(this);
 
