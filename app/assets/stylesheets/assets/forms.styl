@@ -24,6 +24,8 @@ input:disabled
 
 .form-row
   display: flex
+  justify-content: flex-start
+  align-items: flex-start
 
 .form-element
   display: flex
@@ -40,6 +42,12 @@ input:disabled
     padding: .5em .75em
     margin: 0
     border-left: 0
+
+  label
+    font-size: .8em
+
+  input[type="checkbox"]
+    flex: none
 
     &.double-button
       border-right:0

@@ -14,6 +14,11 @@ form(action="/login" method="post")
         i.fa.fa-lock
       input(type="password" name="password")
 
+  section.form-row
+    section.form-element
+      input(type="checkbox" name="rememberme")
+      label Remember me, pretty please.
+
   button(type="submit") Log in
 
   p Or, you know - you could totally <a href="/signup">sign up</a>.

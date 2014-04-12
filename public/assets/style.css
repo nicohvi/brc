@@ -34,6 +34,9 @@ header a:hover {
   border-radius: 3px;
   opacity: 1;
 }
+header .user {
+  font-size: 0.8em;
+}
 body {
   background-color: whiteSmoke;
   font-family: Georgia, serif;

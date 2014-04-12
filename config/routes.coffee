@@ -4,6 +4,7 @@ util = require 'util'
 module.exports = (app, passport) ->
 
   app.get('/', (req, res) ->
+    if req.user then res.redirect('/home')
     res.render 'index.jade', { message: req.flash 'loginMessage' }
   )
 
@@ -20,7 +21,7 @@ module.exports = (app, passport) ->
 
   app.post('/login', (req, res, next) ->
     passport.authenticate('local-login',
-      { badRequestMessage: 'You forgot to type stuff in the boxes, brah.' }, 
+      { badRequestMessage: 'You forgot to type stuff in the boxes, brah.' },
       (error, user, info) ->
         return next(error) if error
         if(!user)
@@ -29,6 +30,12 @@ module.exports = (app, passport) ->
         req.logIn(user, (error) ->
           return next(error) if error
           req.flash('message', 'You have totally logged in.')
+          if req.body.rememberme
+            console.log "remember simba"
+            req.session.cookie.maxAge = 2592000000 # one month
+          else
+            console.log "actually, don't"
+            req.session.expires = false
           return res.redirect('/home')
         ) #logIn
       )(req, res, next)
