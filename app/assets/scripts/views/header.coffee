@@ -7,6 +7,6 @@ class HeaderView
     @.initBindings()
 
   initBindings: ->
-    $(@view).find('a').titleHover()
+    $(@view).find('a').titleHover(20, 'left')
 
 root.HeaderView = HeaderView

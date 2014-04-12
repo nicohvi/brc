@@ -42,7 +42,7 @@
 }).call(this);
 
 (function() {
-  $.fn.titleHover = function() {
+  $.fn.titleHover = function(offset, position) {
     var $hoverBox, mouseEnter, mouseLeave;
     if ($('#hoverBox').length > 0) {
       $hoverBox = $('#hoverBox');
@@ -51,11 +51,20 @@
     }
     mouseEnter = (function(_this) {
       return function() {
-        $hoverBox.css({
-          'left': "" + ($(_this).offset().left + 50) + "px",
-          'top': "" + ($(_this).offset().top) + "px"
-        });
         $hoverBox.html($(_this).data('title'));
+        switch (position) {
+          case 'left':
+            $hoverBox.css({
+              'left': "" + ($(_this).offset().left - ($hoverBox.width() + offset)) + "px",
+              'top': "" + ($(_this).offset().top) + "px"
+            });
+            break;
+          case 'right':
+            $hoverBox.css({
+              'left': "" + ($(_this).offset().left + offset) + "px",
+              'top': "" + ($(_this).offset().top) + "px"
+            });
+        }
         return $hoverBox.fadeIn();
       };
     })(this);
@@ -88,7 +97,7 @@
     }
 
     HeaderView.prototype.initBindings = function() {
-      return $(this.view).find('a').titleHover();
+      return $(this.view).find('a').titleHover(20, 'left');
     };
 
     return HeaderView;
