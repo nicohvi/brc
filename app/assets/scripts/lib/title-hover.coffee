@@ -3,21 +3,26 @@ $.fn.titleHover = (offset, position) ->
   else $hoverBox = $('<div id="hoverBox"></div>').appendTo('body')
 
   mouseEnter = =>
-    $hoverBox.html $(@).data('title')
+    $this = $(@)
+    $hoverBox.html $this.data('title')
     switch position
       when 'left'
         $hoverBox.css {
-          'left': "#{$(@).offset().left-($hoverBox.width()+offset)}px",
-          'top': "#{$(@).offset().top}px"
+          'left': "#{$this.offset().left-($hoverBox.width()+offset)}px",
+          'top': "#{$this.offset().top}px"
         }
+        $this.css 'margin-left', $hoverBox.width()+offset
       when 'right'
         $hoverBox.css {
-          'left': "#{$(@).offset().left+offset}px",
-          'top': "#{$(@).offset().top}px"
+          'left': "#{$this.offset().left+offset}px",
+          'top': "#{$this.offset().top}px"
         }
-    $hoverBox.fadeIn()
+        $this.css 'margin-right', $hoverBox.width()+offset
+    callback = -> $hoverBox.fadeIn()
+    setTimeout callback, 300
 
   mouseLeave = =>
+    $(@).css 'margin', 0
     $hoverBox.fadeOut 'fast', -> $(@).clearQueue()
 
   $(@).hover(

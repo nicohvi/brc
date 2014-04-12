@@ -12,8 +12,7 @@ body, html
   font-size: .5em
   letter-spacing: .1em
   position: absolute
-  display: inline-block
-
+  display: none
 
 header
   background: linear-gradient(to bottom, #5680AA 0, #47698b 100%)
@@ -22,12 +21,16 @@ header
   display: flex
   flex-flow: row wrap
   justify-content: flex-end
+  align-items: center
+  color: #fff
+  height: 30px
 
   a
     color: #fff
     padding: .2em .4em
     opacity: .6
     transition: opacity .3s
+    transition: margin .3s
 
     &:hover
       background: rgba(255,255,255,.3)
@@ -75,9 +78,7 @@ a
   margin: 0
   padding: 0
 
-// Typography-styling
-.user
-  color: $red
+// Typography
 
 .irc-nick
   background: $red

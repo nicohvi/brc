@@ -9,7 +9,7 @@ html {
   font-size: 0.5em;
   letter-spacing: 0.1em;
   position: absolute;
-  display: inline-block;
+  display: none;
 }
 header {
   background: linear-gradient(to bottom, #5680aa 0, #47698b 100%);
@@ -18,12 +18,16 @@ header {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
+  align-items: center;
+  color: #fff;
+  height: 30px;
 }
 header a {
   color: #fff;
   padding: 0.2em 0.4em;
   opacity: 0.6;
   transition: opacity 0.3s;
+  transition: margin 0.3s;
 }
 header a:hover {
   background: rgba(255,255,255,0.3);
@@ -71,9 +75,6 @@ a {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-.user {
-  color: #dd5858;
 }
 .irc-nick {
   background: #dd5858;

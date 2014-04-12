@@ -51,25 +51,33 @@
     }
     mouseEnter = (function(_this) {
       return function() {
-        $hoverBox.html($(_this).data('title'));
+        var $this, callback;
+        $this = $(_this);
+        $hoverBox.html($this.data('title'));
         switch (position) {
           case 'left':
             $hoverBox.css({
-              'left': "" + ($(_this).offset().left - ($hoverBox.width() + offset)) + "px",
-              'top': "" + ($(_this).offset().top) + "px"
+              'left': "" + ($this.offset().left - ($hoverBox.width() + offset)) + "px",
+              'top': "" + ($this.offset().top) + "px"
             });
+            $this.css('margin-left', $hoverBox.width() + offset);
             break;
           case 'right':
             $hoverBox.css({
-              'left': "" + ($(_this).offset().left + offset) + "px",
-              'top': "" + ($(_this).offset().top) + "px"
+              'left': "" + ($this.offset().left + offset) + "px",
+              'top': "" + ($this.offset().top) + "px"
             });
+            $this.css('margin-right', $hoverBox.width() + offset);
         }
-        return $hoverBox.fadeIn();
+        callback = function() {
+          return $hoverBox.fadeIn();
+        };
+        return setTimeout(callback, 300);
       };
     })(this);
     mouseLeave = (function(_this) {
       return function() {
+        $(_this).css('margin', 0);
         return $hoverBox.fadeOut('fast', function() {
           return $(this).clearQueue();
         });
