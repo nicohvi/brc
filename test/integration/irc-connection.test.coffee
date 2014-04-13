@@ -24,15 +24,18 @@ describe 'Connect to IRC', ->
             channels: [
               {
                 name: '#derp',
-                history: []
+                history: [],
+                status: 'inactive'
               }
               {
                 name: '#derp2',
-                history: []
+                history: [],
+                status: 'inactive'
               }
               {
                 name: '#derp3',
-                history: []
+                history: [],
+                status: 'inactive'
               }
             ]
           }
@@ -96,5 +99,43 @@ describe 'Connect to IRC', ->
             done()
           ) # say
         ) # connect
+      )
+    ) # proxy.findOne
+
+  it 'should join a new channel', (done) ->
+    @.timeout(0)
+    IRCProxy.findOne( { nick: 'RetardedTest' }, (err, proxy) ->
+      options = {
+        server: proxy.servers[0].url,
+        nick: proxy.nick,
+        channels: ['#derp', '#derp2', '#derp3']
+      }
+      proxy.createClient( options, ->
+        proxy.join '#derp4', ->
+          proxy.servers[0].channels.length.should.eql 5
+          proxy.servers[0].channels.filter( (channel) ->
+            channel.status == 'active'
+          ).length.should.eql 1
+          proxy.servers[0].channels[4].name.should.eql '#derp4'
+          done()
+      )
+    ) # proxy.findOne
+
+  it 'should part from the specified channel', (done) ->
+    @.timeout(0)
+    IRCProxy.findOne( { nick: 'RetardedTest' }, (err, proxy) ->
+      options = {
+        server: proxy.servers[0].url,
+        nick: proxy.nick,
+        channels: ['#derp', '#derp2', '#derp3']
+      }
+      proxy.createClient( options, ->
+        proxy.join '#derp4', ->
+          proxy.part '#derp4', ->
+            proxy.servers[0].channels.length.should.eql 5
+            proxy.servers[0].channels.filter( (channel) ->
+              channel.status == 'active'
+            ).length.should.eql 0
+            done()
       )
     ) # proxy.findOne
