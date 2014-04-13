@@ -20,15 +20,15 @@
     "bcrypt-nodejs": "*"
   },
   "devDependencies": {
+    "coffee-script": "*",
     "grunt": "*",
-    "supertest": "*",
-    "superagent": "*",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-watch": "*",
+    "grunt-mocha-test": "*",
+    "grunt-newer": "~0.7.0",
     "mocha": "*",
     "should": "*",
-    "grunt-mocha-test": "*",
-    "grunt-contrib-watch": "*",
-    "coffee-script": "*",
-    "grunt-newer": "~0.7.0",
-    "grunt-contrib-coffee": "~0.10.1"
+    "superagent": "*",
+    "supertest": "*"
   }
 }

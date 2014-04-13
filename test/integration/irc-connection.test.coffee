@@ -18,8 +18,25 @@ describe 'Connect to IRC', ->
       ircProxy = new IRCProxy {
         _user: user._id,
         nick: 'RetardedTest',
-        servers:
-          [ { url: 'leguin.freenode.net', channels: ['#derp'] } ]
+        servers: [
+          {
+            url: 'leguin.freenode.net',
+            channels: [
+              {
+                name: '#derp',
+                history: []
+              }
+              {
+                name: '#derp2',
+                history: []
+              }
+              {
+                name: '#derp3',
+                history: []
+              }
+            ]
+          }
+        ]
       }
       ircProxy.save (error) ->
         throw error if error
@@ -38,25 +55,46 @@ describe 'Connect to IRC', ->
         nick: proxy.nick
       }
       should.not.exist(proxy.client)
-      proxy.createClient( options, (err, client) ->
-        client.should.be.ok
+      proxy.createClient( options, ->
         proxy.client.should.be.ok
         done()
       )
     ) # proxy.findOne
 
-  it 'should connect to the given IRC channel(s)', (done) ->
+  it 'should connect to the given IRC channel(s)', (done)->
     @.timeout(0)
     IRCProxy.findOne( { nick: 'RetardedTest' }, (err, proxy) ->
       options = {
         server: proxy.servers[0].url,
         nick: proxy.nick,
-        channels: proxy.servers[0].channels
+        channels: ['#derp', '#derp2', '#derp3']
       }
-      proxy.createClient( options, (err, client) ->
-        proxy.connect(options.channels, (client) ->
-          _.keys(client.chans).should.containEql options.channels[0]
+      proxy.createClient( options, ->
+        proxy.connect(options.channels, ->
+          _.keys(proxy.client.chans).should.eql options.channels
           done()
+        ) # connect
+      )
+    ) # proxy.findOne
+
+  it 'should speak to the given channel', (done) ->
+    @.timeout(0)
+    IRCProxy.findOne( { nick: 'RetardedTest' }, (err, proxy) ->
+      options = {
+        server: proxy.servers[0].url,
+        nick: proxy.nick,
+        channels: ['#derp', '#derp2', '#derp3']
+      }
+      proxy.createClient( options, ->
+        proxy.connect(options.channels, ->
+          proxy.say('#derp', 'hullo.', ->
+            proxy.servers[0].channels[0].history.should.containEql {
+              from: 'RetardedTest',
+              to: '#derp',
+              message: 'hullo.'
+            }
+            done()
+          ) # say
         ) # connect
       )
     ) # proxy.findOne

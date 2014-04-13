@@ -7,18 +7,23 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     mochaTest:
-      test:
+      unit:
         options:
           reporter: 'spec',
           require: 'coffee-script/register',
           log: true
-        src: ['test/**/*.coffee']
+        src: ['test/**/*.coffee', '!test/integration/**/*.coffee']
+      integration:
+        options:
+          require: 'coffee-script/register',
+          log: true
+        src: 'test/integration/**/*.coffee'
     watch:
       coffee:
         files: ['app/models/*.coffee', 'config/*.coffee']
         tasks: ['test']
       test:
-        files: ['test/**/*.coffee']
+        files: ['test/**/*.coffee', '!test/integration/**/*.coffee']
         tasks: ['newTest']
     coffee:
       compile:
@@ -26,5 +31,6 @@ module.exports = (grunt) ->
           './public/assets/application.js': 'app/assets/scripts/**/*.coffee'
 
 
-  grunt.registerTask('test', 'mochaTest')
-  grunt.registerTask('newTest', 'newer:mochaTest')
+  grunt.registerTask('test', 'mochaTest:unit')
+  grunt.registerTask('newTest', 'newer:mochaTest:unit')
+  grunt.registerTask('integrate', 'mochaTest:integration')
