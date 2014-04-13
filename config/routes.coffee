@@ -31,10 +31,8 @@ module.exports = (app, passport) ->
           return next(error) if error
           req.flash('message', 'You have totally logged in.')
           if req.body.rememberme
-            console.log "remember simba"
             req.session.cookie.maxAge = 2592000000 # one month
           else
-            console.log "actually, don't"
             req.session.expires = false
           return res.redirect('/home')
         ) #logIn

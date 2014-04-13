@@ -18,7 +18,7 @@ describe 'Connect to IRC', ->
         _user: user._id,
         nick: 'RetardedTest',
         servers:
-          [ { url: 'leguin.freenode.net', channels: ['#nplol'] } ]
+          [ { url: 'leguin.freenode.net', channels: ['#derp'] } ]
       }
       ircProxy.save (error) ->
         throw error if error
@@ -38,9 +38,25 @@ describe 'Connect to IRC', ->
         channels: proxy.servers[0].channels
       }
       should.not.exist(proxy.client)
-      proxy.connect( options, (err, client) ->
+      proxy.createClient( options, (err, client) ->
+        console.log "say w00t: #{util.inspect client}"
         client.should.be.ok
         proxy.client.should.be.ok
+        done()
+      )
+    ) # proxy.findOne
+
+  it 'should connect to the given IRC channel(s)', (done) ->
+    @.timeout(0)
+    IRCProxy.findOne( { nick: 'RetardedTest' }, (err, proxy) ->
+      options = {
+        server: proxy.servers[0].url,
+        nick: proxy.nick,
+        channels: proxy.servers[0].channels
+      }
+      proxy.createClient( options, (err, client) ->
+        proxy.connect(options.channels)
+        # client.channels.should.eq channels
         done()
       )
     ) # proxy.findOne

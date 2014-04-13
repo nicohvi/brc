@@ -41,10 +41,10 @@ describe 'IRC server schema', ->
   it 'adds channels to registered servers', (done) ->
     user = User.findOne( { email: 'valid@user.com' }, (error, user) ->
       IRCProxy.findOne( { _user: user._id }, (error, proxy) ->
-        proxy.servers[1].channels.push { name: '#nplol', history: [ ] }
+        proxy.servers[1].channels.push { name: '#derp', history: [ ] }
         proxy.save (error) ->
           proxy.servers[1].channels.length.should.eql 1
-          proxy.servers[1].channels[0].name.should.eql '#nplol'
+          proxy.servers[1].channels[0].name.should.eql '#derp'
           done()
       ) #ircProxy.findOne
     ) # user.findOne
@@ -53,12 +53,12 @@ describe 'IRC server schema', ->
   it 'adds messages to registered channels', (done) ->
     user = User.findOne( { email: 'valid@user.com' }, (error, user) ->
       IRCProxy.findOne( { _user: user._id }, (error, proxy) ->
-        proxy.servers[1].channels.push { name: '#nplol', history: [ ] }
+        proxy.servers[1].channels.push { name: '#derp', history: [ ] }
         proxy.servers[1].channels[0].history.push(
-          { from: 'RetardedBear', to: '#nplol', message: 'Hullo guys!' }
+          { from: 'RetardedBear', to: '#derp', message: 'Hullo guys!' }
         )
         proxy.servers[1].channels[0].history.push(
-          { from: 'RetardedBear', to: '#nplol', message: 'You don\'t really like me do you :-(' }
+          { from: 'RetardedBear', to: '#derp', message: 'You don\'t really like me do you :-(' }
         )
         proxy.save (error) ->
           proxy.servers[1].channels[0].history.length.should.eql 2
