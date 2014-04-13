@@ -7,6 +7,7 @@ User = require '../../app/models/user'
 IRCProxy = require '../../app/models/irc-proxy'
 serverUrl = 'http://localhost:8100'
 util = require 'util'
+_ = require 'underscore'
 
 describe 'Connect to IRC', ->
 
@@ -34,12 +35,10 @@ describe 'Connect to IRC', ->
     IRCProxy.findOne( { nick: 'RetardedTest' }, (err, proxy) ->
       options = {
         server: proxy.servers[0].url,
-        nick: proxy.nick,
-        channels: proxy.servers[0].channels
+        nick: proxy.nick
       }
       should.not.exist(proxy.client)
       proxy.createClient( options, (err, client) ->
-        console.log "say w00t: #{util.inspect client}"
         client.should.be.ok
         proxy.client.should.be.ok
         done()
@@ -55,8 +54,9 @@ describe 'Connect to IRC', ->
         channels: proxy.servers[0].channels
       }
       proxy.createClient( options, (err, client) ->
-        proxy.connect(options.channels)
-        # client.channels.should.eq channels
-        done()
+        proxy.connect(options.channels, (client) ->
+          _.keys(client.chans).should.containEql options.channels[0]
+          done()
+        ) # connect
       )
     ) # proxy.findOne
