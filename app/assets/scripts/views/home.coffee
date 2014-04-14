@@ -5,53 +5,64 @@ class HomeView
   constructor: (@events) ->
     @view = $('#content')
     @form = $('#irc-config')
-    @events.addListener "irc_proxy:submit:success", (response) =>
-      @.clearErrors()
-      @.updateView(response)
-    @events.addListener "irc_proxy:submit:error", (error) =>
-      @.showError(error)
-    @.initBindings()
+    @connect = $('#connect')
+    @initListeners()
+    @initBindings()
 
-  initBindings: ->
+  initListeners: =>
+    @events.addListener "irc_proxy:submit:success", (response) =>
+      @clearErrors()
+      @updateView(response)
+
+    @events.addListener "irc_proxy:submit:error", (error) =>
+      @showError(error)
+
+  initBindings: =>
     @form.on 'submit', (event) =>
       event.preventDefault()
 
     @form.on 'keydown', (event) =>
-      @.submitForm() if event.keyCode == 13
+      @submitForm() if event.keyCode == 13
 
     @form.find('.confirm').on 'click', (event) =>
-      @.submitForm()
+      @submitForm()
 
     $('.message').on 'click', (event) ->
       $(@).html('').addClass('hidden')
 
-    $('input[name=nick] + .lock').on 'click', (event) ->
+    $('input + .lock').on 'click', (event) ->
       $input = $(@).prev()
       $input.attr('disabled', (idx, oldAttr) -> !oldAttr)
       $(@).find('i').toggleClass('fa-lock fa-unlock-alt')
       $input.focus() unless $input.attr('disabled')
 
-  showError: (error) ->
+    @connect.on 'click', (event) ->
+      $el = $(@)
+      options = { url: $el.attr('href'), method: 'post', data: $el.data('proxy-id') }
+      $.ajax(options)
+        .done(debugger)
+
+  showError: (error) =>
     @form.find('.message').addClass('alert').removeClass('hidden').html(error.message)
 
-  clearErrors: ->
+  clearErrors: =>
     @form.find('.message').html('').removeClass('alert').addClass('hidden')
 
-  updateView: (data) ->
+  updateView: (data) =>
     @form.find('.message').addClass('notice').removeClass('hidden').html(data.message)
-    @.updateForm(data.proxy)
-    @.lockForm()
+    @updateForm(data.proxy)
+    @lockForm()
 
-  updateForm: (proxy) ->
+  updateForm: (proxy) =>
     for key, value of proxy
       $("input[name=#{key}]").val(value)
 
-  lockForm: ->
+  lockForm: =>
     _.each $('.lock'), (element, index) ->
       $(element).find('i').removeClass('fa-unlock-alt').addClass('fa-lock')
       $(element).prev().attr('disabled', true)
 
-  submitForm: ->
+  submitForm: =>
     data = @form.find('input').serialize()
 
     options =

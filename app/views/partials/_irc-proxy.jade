@@ -11,3 +11,21 @@ section#irc-proxy
         input.double-button(type="text" name="nick" value="#{proxy.nick}" disabled)
         aside.lock
           i.fa.fa-lock
+
+    if proxy.servers[0]
+      section.form-row
+        section.form-element
+          aside Server
+          input.double-button(type="text" name="server" value="#{proxy.servers[0].url}" disabled)
+          aside.lock
+            i.fa.fa-lock
+
+    else
+      section.form-row
+        section.form-element
+          aside Server
+          input.double-button(type="text" name="server" value="" disabled)
+          aside.lock
+            i.fa.fa-lock
+
+  button(href="/connect" id="connect", data-proxy-id="#{proxy._id}") Connect

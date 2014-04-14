@@ -7,6 +7,7 @@ class Application
     @views = []
     @views.push new HomeView @eventEmitter
     @views.push new HeaderView @eventEmitter
+    @views.push new BRCView @eventEmitter
 
 class App
 

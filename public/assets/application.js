@@ -9,6 +9,7 @@
       this.views = [];
       this.views.push(new HomeView(this.eventEmitter));
       this.views.push(new HeaderView(this.eventEmitter));
+      this.views.push(new BRCView(this.eventEmitter));
     }
 
     return Application;
@@ -93,13 +94,31 @@
 }).call(this);
 
 (function() {
-  var HeaderView, root;
+  var BRCView, root;
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  BRCView = (function() {
+    function BRCView() {}
+
+    return BRCView;
+
+  })();
+
+  root.BRCView = BRCView;
+
+}).call(this);
+
+(function() {
+  var HeaderView, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
   HeaderView = (function() {
     function HeaderView(events) {
       this.events = events;
+      this.initBindings = __bind(this.initBindings, this);
       this.view = $('header');
       this.initBindings();
     }
@@ -117,28 +136,42 @@
 }).call(this);
 
 (function() {
-  var HomeView, root;
+  var HomeView, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
   HomeView = (function() {
     function HomeView(events) {
       this.events = events;
+      this.submitForm = __bind(this.submitForm, this);
+      this.lockForm = __bind(this.lockForm, this);
+      this.updateForm = __bind(this.updateForm, this);
+      this.updateView = __bind(this.updateView, this);
+      this.clearErrors = __bind(this.clearErrors, this);
+      this.showError = __bind(this.showError, this);
+      this.initBindings = __bind(this.initBindings, this);
+      this.initListeners = __bind(this.initListeners, this);
       this.view = $('#content');
       this.form = $('#irc-config');
+      this.connect = $('#connect');
+      this.initListeners();
+      this.initBindings();
+    }
+
+    HomeView.prototype.initListeners = function() {
       this.events.addListener("irc_proxy:submit:success", (function(_this) {
         return function(response) {
           _this.clearErrors();
           return _this.updateView(response);
         };
       })(this));
-      this.events.addListener("irc_proxy:submit:error", (function(_this) {
+      return this.events.addListener("irc_proxy:submit:error", (function(_this) {
         return function(error) {
           return _this.showError(error);
         };
       })(this));
-      this.initBindings();
-    }
+    };
 
     HomeView.prototype.initBindings = function() {
       this.form.on('submit', (function(_this) {
@@ -161,7 +194,7 @@
       $('.message').on('click', function(event) {
         return $(this).html('').addClass('hidden');
       });
-      return $('input[name=nick] + .lock').on('click', function(event) {
+      $('input + .lock').on('click', function(event) {
         var $input;
         $input = $(this).prev();
         $input.attr('disabled', function(idx, oldAttr) {
@@ -171,6 +204,18 @@
         if (!$input.attr('disabled')) {
           return $input.focus();
         }
+      });
+      return this.connect.on('click', function(event) {
+        var $el, options;
+        $el = $(this);
+        options = {
+          url: $el.attr('href'),
+          method: 'post',
+          data: $el.data('proxy-id')
+        };
+        return $.ajax(options).done((function() {
+          debugger;
+        })());
       });
     };
 

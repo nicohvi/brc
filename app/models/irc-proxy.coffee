@@ -13,7 +13,7 @@ ircProxySchema = Schema
   nick: String
   servers: [serverSchema]
 
-# TODO: more servers
+# TODO: add functionality to have more servers
 serverSchema = Schema
   url: String
   channels: [channelSchema]
@@ -61,7 +61,6 @@ ircProxySchema.methods.createClient = (options, done) ->
       @servers[0].channels.push(channel)
     else
       proxyChannel.status = 'active'
-
 
   @client = client
 

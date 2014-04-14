@@ -1,5 +1,6 @@
-User = require '../app/models/user'
+User = require '../models/user'
 util = require 'util'
+_ = require 'underscore'
 
 module.exports = (app, passport) ->
 
@@ -54,31 +55,6 @@ module.exports = (app, passport) ->
       ) # getIrcProxy
     ) # findOne
   )
-
-  app.post('/irc-config', isLoggedIn, (req, res) ->
-    if req.body.nick? and not (req.body.nick == "")
-      User.findOne( { email: req.user.email }, (error, user) ->
-        user.getIrcProxy (error, proxy) ->
-          return handleError(res, error) if error
-          if proxy?
-            proxy.nick = req.body.nick
-            proxy.servers = req.body.servers
-            proxy.save (error) ->
-              return handleError(res, error) if error
-              res.send { message: 'Proxy updated.', proxy: proxy }
-          else
-            user.createProxy (error, proxy) ->
-              return handleError(res, error) if error
-              proxy.nick = req.body.nick
-              proxy.servers = req.body.servers
-              proxy.save (error) ->
-                handleError(error) if error
-                res.send { message: 'Proxy created.', proxy: proxy }
-    ) # findOne
-    else
-      res.status 400
-      res.send { message: 'Don\'t just submit an empty form, brah' }
-  ) # post
 
 isLoggedIn = (req, res, next) ->
   return next() if req.isAuthenticated()

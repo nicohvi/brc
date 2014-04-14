@@ -60,7 +60,7 @@ module.exports = (port, env) ->
     app.use express.static("#{__dirname}/public")
 
   # routes
-  require('./config/routes')(app, passport)
+  require('./app/routes/routes')(app, passport)
 
   # start the server
   app.listen port, console.log "Express server listening on port #{port}"
