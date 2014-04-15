@@ -71,14 +71,19 @@
             $this.css('margin-right', $hoverBox.width() + offset);
         }
         callback = function() {
-          return $hoverBox.fadeIn();
+          return $hoverBox.fadeIn('fast');
         };
-        return setTimeout(callback, 300);
+        return _this.timeout = setTimeout(callback, 300);
       };
     })(this);
     mouseLeave = (function(_this) {
       return function() {
+        var callback;
+        clearTimeout(_this.timeout);
         $(_this).css('margin', 0);
+        callback = function() {
+          return $(this).clearQueue();
+        };
         return $hoverBox.fadeOut('fast', function() {
           return $(this).clearQueue();
         });
@@ -211,11 +216,15 @@
         options = {
           url: $el.attr('href'),
           method: 'post',
-          data: $el.data('proxy-id')
+          data: {
+            proxyId: $el.data('proxy-id')
+          }
         };
-        return $.ajax(options).done((function() {
+        return $.ajax(options).done(function(data) {
           debugger;
-        })());
+        }).fail(function(data) {
+          debugger;
+        });
       });
     };
 

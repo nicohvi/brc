@@ -33,6 +33,16 @@ module.exports = (app, passport) ->
       res.send { message: 'Don\'t just submit an empty form, brah' }
   ) # post
 
+  app.post('/connect', isLoggedIn, (req, res) ->
+    console.log util.inspect(req.body)
+    IRCProxy.findOne( { _id: req.body.proxyId }, (err, proxy) ->
+      if err
+        res.status 404
+        res.send { message: 'Couldn\'t find proxy, brah'}
+      # start WS-shit if proxy :-)
+    ) # proxy.findOne
+  ) # post
+
 isLoggedIn = (req, res, next) ->
   return next() if req.isAuthenticated()
   res.redirect('/')

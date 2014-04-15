@@ -38,9 +38,13 @@ class HomeView
 
     @connect.on 'click', (event) ->
       $el = $(@)
-      options = { url: $el.attr('href'), method: 'post', data: $el.data('proxy-id') }
+      options =
+        url: $el.attr('href'),
+        method: 'post',
+        data: { proxyId: $el.data('proxy-id') }
+
       $.ajax(options)
-        .done(debugger)
+        .done((data)->debugger).fail((data)->debugger)
 
   showError: (error) =>
     @form.find('.message').addClass('alert').removeClass('hidden').html(error.message)

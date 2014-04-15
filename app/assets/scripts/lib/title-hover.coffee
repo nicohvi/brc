@@ -18,10 +18,11 @@ $.fn.titleHover = (offset, position) ->
           'top': "#{$this.offset().top}px"
         }
         $this.css 'margin-right', $hoverBox.width()+offset
-    callback = -> $hoverBox.fadeIn()
-    setTimeout callback, 300
+    callback = -> $hoverBox.fadeIn 'fast'
+    @timeout = setTimeout callback, 300
 
   mouseLeave = =>
+    clearTimeout(@timeout)
     $(@).css 'margin', 0
     $hoverBox.fadeOut 'fast', -> $(@).clearQueue()
 
