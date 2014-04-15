@@ -20,6 +20,7 @@
     "bcrypt-nodejs": "*"
   },
   "devDependencies": {
+    "cheerio": "^0.15.0",
     "coffee-script": "*",
     "grunt": "*",
     "grunt-contrib-coffee": "~0.10.1",

@@ -2,7 +2,7 @@ root = exports ? this
 
 class Application
 
-  constructor: () ->
+  constructor: ->
     @eventEmitter = new EventEmitter()
     @views = []
     @views.push new HomeView @eventEmitter

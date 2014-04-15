@@ -51,6 +51,7 @@ module.exports = (app, passport) ->
       return handleError(res, error) if error
       user.getIrcProxy( (error, proxy) ->
         return handleError(res, error) if error
+        console.log "proxy: #{util.inspect proxy}"
         res.render 'home.jade', { user: user, proxy: proxy, message: req.flash 'message' }
       ) # getIrcProxy
     ) # findOne

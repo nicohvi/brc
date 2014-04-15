@@ -10,11 +10,11 @@ class HomeView
     @initBindings()
 
   initListeners: =>
-    @events.addListener "irc_proxy:submit:success", (response) =>
+    @events.addListener 'irc_proxy:submit:success', (response) =>
       @clearErrors()
       @updateView(response)
 
-    @events.addListener "irc_proxy:submit:error", (error) =>
+    @events.addListener 'irc_proxy:submit:error', (error) =>
       @showError(error)
 
   initBindings: =>
@@ -36,15 +36,17 @@ class HomeView
       $(@).find('i').toggleClass('fa-lock fa-unlock-alt')
       $input.focus() unless $input.attr('disabled')
 
-    @connect.on 'click', (event) ->
-      $el = $(@)
+    @connect.on 'click', (event) =>
+      $el = @connect
       options =
         url: $el.attr('href'),
         method: 'post',
         data: { proxyId: $el.data('proxy-id') }
 
       $.ajax(options)
-        .done((data)->debugger).fail((data)->debugger)
+        .done  (data) =>
+          @events.emit 'irc_proxy:connected'
+        .fail  (error) =>  @showError(jqXHR.responseJSON)
 
   showError: (error) =>
     @form.find('.message').addClass('alert').removeClass('hidden').html(error.message)
@@ -75,8 +77,8 @@ class HomeView
       data:    data
 
     $.ajax(options)
-      .done (data) =>   @events.emit "irc_proxy:submit:success", data
-      .fail (jqXHR) =>  @events.emit "irc_proxy:submit:error", jqXHR.responseJSON
+      .done (data) =>   @events.emit 'irc_proxy:submit:success', data
+      .fail (jqXHR) =>  @events.emit 'irc_proxy:submit:error', jqXHR.responseJSON
 
 
 root.HomeView = HomeView

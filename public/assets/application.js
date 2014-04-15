@@ -78,12 +78,8 @@
     })(this);
     mouseLeave = (function(_this) {
       return function() {
-        var callback;
         clearTimeout(_this.timeout);
         $(_this).css('margin', 0);
-        callback = function() {
-          return $(this).clearQueue();
-        };
         return $hoverBox.fadeOut('fast', function() {
           return $(this).clearQueue();
         });
@@ -99,12 +95,63 @@
 }).call(this);
 
 (function() {
-  var BRCView, root;
+  var WebsocketClient, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  WebsocketClient = (function() {
+    function WebsocketClient(url, events) {
+      this.url = url;
+      this.events = events;
+      this.connect = __bind(this.connect, this);
+      console.log("websocket client created with url: " + this.url);
+    }
+
+    WebsocketClient.prototype.connect = function() {
+      this.socket = new eio.Socket(this.url);
+      return this.socket.on('open', (function(_this) {
+        return function() {
+          _this.socket.send('ping');
+          _this.socket.on('message', function(data) {
+            console.log("client received " + data);
+            return _this.socket.send('ping');
+          });
+          return _this.socket.on('close', function() {});
+        };
+      })(this));
+    };
+
+    return WebsocketClient;
+
+  })();
+
+  root.WebsocketClient = WebsocketClient;
+
+}).call(this);
+
+(function() {
+  var BRCView, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
   BRCView = (function() {
-    function BRCView() {}
+    function BRCView(events) {
+      this.events = events;
+      this.initListeners = __bind(this.initListeners, this);
+      this.view = $('#irc');
+      this.initListeners();
+    }
+
+    BRCView.prototype.initListeners = function() {
+      return this.events.addListener('irc_proxy:connected', (function(_this) {
+        return function() {
+          _this.websocketClient = new WebsocketClient('ws://localhost/', _this.events);
+          return _this.websocketClient.connect();
+        };
+      })(this));
+    };
 
     return BRCView;
 
@@ -165,13 +212,13 @@
     }
 
     HomeView.prototype.initListeners = function() {
-      this.events.addListener("irc_proxy:submit:success", (function(_this) {
+      this.events.addListener('irc_proxy:submit:success', (function(_this) {
         return function(response) {
           _this.clearErrors();
           return _this.updateView(response);
         };
       })(this));
-      return this.events.addListener("irc_proxy:submit:error", (function(_this) {
+      return this.events.addListener('irc_proxy:submit:error', (function(_this) {
         return function(error) {
           return _this.showError(error);
         };
@@ -210,22 +257,24 @@
           return $input.focus();
         }
       });
-      return this.connect.on('click', function(event) {
-        var $el, options;
-        $el = $(this);
-        options = {
-          url: $el.attr('href'),
-          method: 'post',
-          data: {
-            proxyId: $el.data('proxy-id')
-          }
+      return this.connect.on('click', (function(_this) {
+        return function(event) {
+          var $el, options;
+          $el = _this.connect;
+          options = {
+            url: $el.attr('href'),
+            method: 'post',
+            data: {
+              proxyId: $el.data('proxy-id')
+            }
+          };
+          return $.ajax(options).done(function(data) {
+            return _this.events.emit('irc_proxy:connected');
+          }).fail(function(error) {
+            return _this.showError(jqXHR.responseJSON);
+          });
         };
-        return $.ajax(options).done(function(data) {
-          debugger;
-        }).fail(function(data) {
-          debugger;
-        });
-      });
+      })(this));
     };
 
     HomeView.prototype.showError = function(error) {
@@ -269,11 +318,11 @@
       };
       return $.ajax(options).done((function(_this) {
         return function(data) {
-          return _this.events.emit("irc_proxy:submit:success", data);
+          return _this.events.emit('irc_proxy:submit:success', data);
         };
       })(this)).fail((function(_this) {
         return function(jqXHR) {
-          return _this.events.emit("irc_proxy:submit:error", jqXHR.responseJSON);
+          return _this.events.emit('irc_proxy:submit:error', jqXHR.responseJSON);
         };
       })(this));
     };

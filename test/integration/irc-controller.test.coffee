@@ -6,6 +6,7 @@ User = require '../../app/models/user'
 IRCProxy = require '../../app/models/irc-proxy'
 serverUrl = 'http://localhost:8100'
 util = require 'util'
+cheerio = require 'cheerio'
 
 describe 'connect to the given IRC server through BRC', ->
   before (done) ->
@@ -17,7 +18,7 @@ describe 'connect to the given IRC server through BRC', ->
         nick: 'RetardedTest',
         servers: [ url: 'leguin.freenode.net', channels: [] ]
       }
-      ircProxy.save (error) ->
+      ircProxy.save (error) =>
         throw error if error
         done()
 
@@ -33,12 +34,11 @@ describe 'connect to the given IRC server through BRC', ->
       .post "#{serverUrl}/login"
       .send email: 'valid@user.com', password: '123password'
       .end (err, res) ->
+        $ = cheerio.load(res.text)
+        proxyId = $('#connect').attr('data-proxy-id')
         agent
         .post "#{serverUrl}/connect"
-        .send 
+        .send proxyId: proxyId
         .end (err, res) ->
           res.status.should.equal 200
-          res.text.should.include 'Proxy updated'
-          res.text.should.include 'RetardedBear'
-          res.text.should.include 'freenode'
           done()

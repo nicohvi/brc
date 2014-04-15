@@ -1,5 +1,7 @@
 module.exports = (port, env) ->
   express = require 'express'
+  engine = require './config/engine'
+  http = require 'http'
   mongoose = require 'mongoose'
   app = express()
   port = port || 8000
@@ -63,4 +65,10 @@ module.exports = (port, env) ->
   require('./app/routes/routes')(app, passport)
 
   # start the server
-  app.listen port, console.log "Express server listening on port #{port}"
+  server = app.listen port, console.log "Express server listening on port #{port}"
+
+  # start the websocket server
+  engine.startSocketServer(server)
+
+  # return the server instance
+  server
