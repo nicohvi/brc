@@ -23,6 +23,7 @@
     "coffee-script": "*",
     "grunt": "*",
     "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-stylus": "^0.14.0",
     "grunt-contrib-watch": "*",
     "grunt-mocha-test": "*",
     "grunt-newer": "~0.7.0",

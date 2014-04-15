@@ -4,6 +4,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-newer')
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-stylus')
 
   grunt.initConfig
     mochaTest:
@@ -29,7 +30,10 @@ module.exports = (grunt) ->
       compile:
         files:
           './public/assets/application.js': 'app/assets/scripts/**/*.coffee'
-
+    stylus:
+      compile:
+        files:
+          './public/assets/application.css': 'app/assets/stylesheets/**/*.styl'
 
   grunt.registerTask('test', 'mochaTest:unit')
   grunt.registerTask('newTest', 'newer:mochaTest:unit')
