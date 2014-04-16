@@ -36,21 +36,6 @@ class HomeView
       $(@).find('i').toggleClass('fa-lock fa-unlock-alt')
       $input.focus() unless $input.attr('disabled')
 
-    @connect.on 'click', (event) =>
-      $el = @connect
-      options =
-        url: $el.attr('href'),
-        method: 'post',
-        data: { proxyId: $el.data('proxy-id') }
-
-      $.ajax(options)
-        .done  (data) =>
-          @events.emit 'irc_proxy:connected'
-        .fail  (error) =>  @showError(jqXHR.responseJSON)
-
-  showError: (error) =>
-    @form.find('.message').addClass('alert').removeClass('hidden').html(error.message)
-
   clearErrors: =>
     @form.find('.message').html('').removeClass('alert').addClass('hidden')
 

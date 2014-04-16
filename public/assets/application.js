@@ -104,22 +104,29 @@
     function WebsocketClient(url, events) {
       this.url = url;
       this.events = events;
+      this.send = __bind(this.send, this);
       this.connect = __bind(this.connect, this);
       console.log("websocket client created with url: " + this.url);
     }
 
     WebsocketClient.prototype.connect = function() {
-      this.socket = new eio.Socket(this.url);
+      this.socket = io.connect(this.url);
       return this.socket.on('open', (function(_this) {
         return function() {
-          _this.socket.send('ping');
+          console.log("opened");
           _this.socket.on('message', function(data) {
-            console.log("client received " + data);
-            return _this.socket.send('ping');
+            return console.log("client received " + data);
           });
           return _this.socket.on('close', function() {});
         };
       })(this));
+    };
+
+    WebsocketClient.prototype.send = function(command, data) {
+      console.log("emitting: " + command + " with data: " + data);
+      return this.socket.emit(command, {
+        options: data
+      });
     };
 
     return WebsocketClient;
@@ -139,16 +146,22 @@
   BRCView = (function() {
     function BRCView(events) {
       this.events = events;
-      this.initListeners = __bind(this.initListeners, this);
+      this.initBindings = __bind(this.initBindings, this);
       this.view = $('#irc');
-      this.initListeners();
+      this.connect = $('#connect');
+      this.websocketClient = new WebsocketClient('http://localhost', this.events);
+      this.websocketClient.connect();
+      this.initBindings();
     }
 
-    BRCView.prototype.initListeners = function() {
-      return this.events.addListener('irc_proxy:connected', (function(_this) {
-        return function() {
-          _this.websocketClient = new WebsocketClient('ws://localhost/', _this.events);
-          return _this.websocketClient.connect();
+    BRCView.prototype.initBindings = function() {
+      return this.connect.on('click', (function(_this) {
+        return function(event) {
+          var $el;
+          $el = _this.connect;
+          return _this.websocketClient.send('connectToIRC', {
+            proxyId: $el.data('proxy-id')
+          });
         };
       })(this));
     };
@@ -201,7 +214,6 @@
       this.updateForm = __bind(this.updateForm, this);
       this.updateView = __bind(this.updateView, this);
       this.clearErrors = __bind(this.clearErrors, this);
-      this.showError = __bind(this.showError, this);
       this.initBindings = __bind(this.initBindings, this);
       this.initListeners = __bind(this.initListeners, this);
       this.view = $('#content');
@@ -246,7 +258,7 @@
       $('.message').on('click', function(event) {
         return $(this).html('').addClass('hidden');
       });
-      $('input + .lock').on('click', function(event) {
+      return $('input + .lock').on('click', function(event) {
         var $input;
         $input = $(this).prev();
         $input.attr('disabled', function(idx, oldAttr) {
@@ -257,28 +269,6 @@
           return $input.focus();
         }
       });
-      return this.connect.on('click', (function(_this) {
-        return function(event) {
-          var $el, options;
-          $el = _this.connect;
-          options = {
-            url: $el.attr('href'),
-            method: 'post',
-            data: {
-              proxyId: $el.data('proxy-id')
-            }
-          };
-          return $.ajax(options).done(function(data) {
-            return _this.events.emit('irc_proxy:connected');
-          }).fail(function(error) {
-            return _this.showError(jqXHR.responseJSON);
-          });
-        };
-      })(this));
-    };
-
-    HomeView.prototype.showError = function(error) {
-      return this.form.find('.message').addClass('alert').removeClass('hidden').html(error.message);
     };
 
     HomeView.prototype.clearErrors = function() {

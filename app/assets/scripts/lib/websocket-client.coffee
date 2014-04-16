@@ -6,16 +6,20 @@ class WebsocketClient
     console.log "websocket client created with url: #{@url}"
 
   connect: =>
-    @socket = new eio.Socket @url
+    @socket = io.connect(@url)
 
     @socket.on 'open', =>
 
-      @socket.send 'ping'
+      console.log "opened"
 
       @socket.on 'message', (data) =>
         console.log "client received #{data}"
-        @socket.send 'ping'
+        # @socket.send 'ping'
 
       @socket.on 'close', =>
+
+  send: (command, data) =>
+    console.log "emitting: #{command} with data: #{data}"
+    @socket.emit command, { options: data }
 
 root.WebsocketClient = WebsocketClient

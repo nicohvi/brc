@@ -2,7 +2,6 @@ User = require '../models/user'
 IRCProxy = require '../models/irc-proxy'
 util = require 'util'
 _ = require 'underscore'
-engine = require '../../config/engine'
 
 module.exports = (app, passport) ->
 
@@ -35,16 +34,16 @@ module.exports = (app, passport) ->
       res.send { message: 'Don\'t just submit an empty form, brah' }
   ) # post
 
-  app.post('/connect', isLoggedIn, (req, res) ->
-    console.log util.inspect(req.body)
-    IRCProxy.findOne( { _id: req.body.proxyId }, (err, proxy) ->
-      if err
-        res.status 404
-        res.send { message: 'Couldn\'t find proxy, brah'}
-      else
-        res.send 200
-    ) # proxy.findOne
-  ) # post
+  # app.post('/connect', isLoggedIn, (req, res) ->
+  #   console.log util.inspect(req.body)
+  #   IRCProxy.findOne( { _id: req.body.proxyId }, (err, proxy) ->
+  #     if err
+  #       res.status 404
+  #       res.send { message: 'Couldn\'t find proxy, brah'}
+  #     else
+  #       res.send 200
+  #   ) # proxy.findOne
+  # ) # post
 
 isLoggedIn = (req, res, next) ->
   return next() if req.isAuthenticated()
