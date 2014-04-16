@@ -1,6 +1,7 @@
 mongoose = require 'mongoose'
 irc = require '../../lib/irc/irc'
 util = require 'util'
+events = require 'events'
 _ = require 'underscore'
 Schema = mongoose.Schema
 
@@ -28,46 +29,54 @@ messageSchema = Schema
   to: String,
   message: String
 
+# virtuals might be redundant
 ircProxySchema.virtual('client').get ->
   @ircClient
 
 ircProxySchema.virtual('client').set (client) ->
   @ircClient = client
 
+ircProxySchema.virtual('events').get ->
+  @eventEmitter
+
+ircProxySchema.virtual('events').set (eventEmitter) ->
+  @eventEmitter = eventEmitter
+
 ircProxySchema.methods.createClient = (options, done) ->
-
   console.log "createClient called with options: #{util.inspect options}"
-  client = new irc.Client options.server, options.nick
 
-  client.on 'error', (message) ->
-    console.log "error received: #{util.inspect message}"
+  unless options?
+    client = new irc.Client @servers[0].url, @nick
+  else
+    client = new irc.Client options.server, options.nick
 
-  client.on 'message', (from, to, message) =>
-    channel = @servers[0].channels.filter( (channel) ->
-        channel.name == to
-    ).pop()
-
-    channel.history.push { from: from, to: to, message: message }
-    console.log "this is history: #{util.inspect channel.history}"
-
-  client.on 'join', (channel, nick, message) =>
-    proxyChannel = @servers[0].channels.filter( (_channel) ->
-        _channel.name == channel
-    ).pop()
-
-    # create new channel if this is the first time we encounter it.
-    unless proxyChannel?
-      channel = { name: channel, history: [], status: 'active' }
-      @servers[0].channels.push(channel)
-    else
-      proxyChannel.status = 'active'
-
+  # instantiate virtual attributes
   @client = client
+  @events = new events.EventEmitter()
+
+  @initClientBindings()
 
   client.on 'registered', =>
     # add status channel to list of channels
     @servers[0].channels.push { name: '#status', history: [] }
-    done()
+    @events.emit 'registered'
+    done() if done?
+
+ircProxySchema.methods.initClientBindings = ->
+  @client.on 'error', (message) =>
+    console.log "error received: #{util.inspect message}"
+
+  @client.on 'message', (from, to, message) =>
+    addToHistory(from, to, message)
+
+  @client.on 'join', (channel, nick, message) =>
+    addChannel(channel)
+
+addToHistory = (from, to, message) =>
+  # todo
+
+addChannel = (channel) =>
+  # todo
 
 # channels: list of strings representing channel names
 ircProxySchema.methods.connect = (channels, done) ->
@@ -98,5 +107,9 @@ ircProxySchema.methods.say = (to, message, done) ->
 
   @client.say to, message
   done(@client) if done?
+
+ircProxySchema.methods.emit = (event, data) ->
+
+  @db.model('IRCProxy').emit event, data
 
 module.exports = db.model('IRCProxy', ircProxySchema)

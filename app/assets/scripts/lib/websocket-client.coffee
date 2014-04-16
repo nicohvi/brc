@@ -8,18 +8,16 @@ class WebsocketClient
   connect: =>
     @socket = io.connect(@url)
 
-    @socket.on 'open', =>
+    @socket.on 'message', (data) =>
+      console.log "client received #{data}"
 
-      console.log "opened"
+    @socket.on 'registered', (data) =>
+      console.log "client received registered"
 
-      @socket.on 'message', (data) =>
-        console.log "client received #{data}"
-        # @socket.send 'ping'
+    @socket.on 'close', =>
 
-      @socket.on 'close', =>
-
-  send: (command, data) =>
-    console.log "emitting: #{command} with data: #{data}"
-    @socket.emit command, { options: data }
+  emit: (command, data) =>
+    console.log "emitting: #{command}"
+    @socket.emit command, data
 
 root.WebsocketClient = WebsocketClient

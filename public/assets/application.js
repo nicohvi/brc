@@ -104,29 +104,31 @@
     function WebsocketClient(url, events) {
       this.url = url;
       this.events = events;
-      this.send = __bind(this.send, this);
+      this.emit = __bind(this.emit, this);
       this.connect = __bind(this.connect, this);
       console.log("websocket client created with url: " + this.url);
     }
 
     WebsocketClient.prototype.connect = function() {
       this.socket = io.connect(this.url);
-      return this.socket.on('open', (function(_this) {
-        return function() {
-          console.log("opened");
-          _this.socket.on('message', function(data) {
-            return console.log("client received " + data);
-          });
-          return _this.socket.on('close', function() {});
+      this.socket.on('message', (function(_this) {
+        return function(data) {
+          return console.log("client received " + data);
         };
+      })(this));
+      this.socket.on('registered', (function(_this) {
+        return function(data) {
+          return console.log("client received registered");
+        };
+      })(this));
+      return this.socket.on('close', (function(_this) {
+        return function() {};
       })(this));
     };
 
-    WebsocketClient.prototype.send = function(command, data) {
-      console.log("emitting: " + command + " with data: " + data);
-      return this.socket.emit(command, {
-        options: data
-      });
+    WebsocketClient.prototype.emit = function(command, data) {
+      console.log("emitting: " + command);
+      return this.socket.emit(command, data);
     };
 
     return WebsocketClient;
@@ -149,7 +151,7 @@
       this.initBindings = __bind(this.initBindings, this);
       this.view = $('#irc');
       this.connect = $('#connect');
-      this.websocketClient = new WebsocketClient('http://localhost', this.events);
+      this.websocketClient = new WebsocketClient('localhost', this.events);
       this.websocketClient.connect();
       this.initBindings();
     }
@@ -159,7 +161,7 @@
         return function(event) {
           var $el;
           $el = _this.connect;
-          return _this.websocketClient.send('connectToIRC', {
+          return _this.websocketClient.emit('connectToIRC', {
             proxyId: $el.data('proxy-id')
           });
         };
