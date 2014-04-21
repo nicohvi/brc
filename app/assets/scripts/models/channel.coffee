@@ -6,20 +6,23 @@ class Channel
     @mode = opts.mode
     @topic = opts.topic
     @history = []
+    @initListeners()
     @updateView()
 
-  addMessage: (message) =>
-    @history.push message
+  initListeners: =>
+    @events.on 'add_message:channel', (message) =>
+      console.log "message: #{JSON.stringify message}"
+      return false unless message.to == @name
+      @addMessage(message.from, message.message)
+
+  addMessage: (sender, message) =>
+    @history.push {sender: sender, message: message}
     @updateView()
 
   updateView: =>
-    console.log "name: #{@name}"
-    console.log "tostring: #{JSON.stringify @toString()}"
-    console.log "self: #{JSON.stringify @}"
-
     $('#irc').html templatizer.channel(@toString())
 
   toString: =>
-    { channel: { name: @name }}
+    { channel: { name: @name, history: @history }}
 
 root.Channel = Channel

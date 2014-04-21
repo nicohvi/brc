@@ -20,11 +20,6 @@ class WebsocketController
       @events.emit 'message', message
 
     @socket.on 'registered', (user) =>
-      # node-irc client has been registered, now we have the status channel.
-      # 1 - create new user object
-      # 2 - create new channel object
-      # 3 - add channel object to user
-      # 4 - display messages from status in the channelView
       User.get() # create/get user singleton
       @events.emit 'add_channel', '#status'
 

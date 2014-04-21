@@ -75,7 +75,7 @@ ircProxySchema.methods.initClientBindings = ->
     # @events.emit 'message', {to: '#status', message: motd}
 
   @client.on 'raw', (message) =>
-    @events.emit 'message', { to: '#status', message: message }
+    @events.emit 'message', { from: message.server, to: '#status', message: message.args[1] }
 
 # channels: list of strings representing channel names
 ircProxySchema.methods.connect = (channels, done) ->

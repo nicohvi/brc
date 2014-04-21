@@ -66,11 +66,11 @@
           channel = _this.channels.filter(function(_channel) {
             return _channel.name === message.to;
           }).pop();
-          console.log("channel: " + (JSON.stringify(channel)));
+          console.log("message for channel: " + (JSON.stringify(channel)));
           if (channel == null) {
             _this.channels.push(new Channel(message.to, _this.events, {}));
           }
-          return _this.events.emit('add_message', channel);
+          return _this.events.emit('add_message:channel', message);
         };
       })(this));
     };
@@ -210,28 +210,43 @@
       this.toString = __bind(this.toString, this);
       this.updateView = __bind(this.updateView, this);
       this.addMessage = __bind(this.addMessage, this);
+      this.initListeners = __bind(this.initListeners, this);
       this.mode = opts.mode;
       this.topic = opts.topic;
       this.history = [];
+      this.initListeners();
       this.updateView();
     }
 
-    Channel.prototype.addMessage = function(message) {
-      this.history.push(message);
+    Channel.prototype.initListeners = function() {
+      return this.events.on('add_message:channel', (function(_this) {
+        return function(message) {
+          console.log("message: " + (JSON.stringify(message)));
+          if (message.to !== _this.name) {
+            return false;
+          }
+          return _this.addMessage(message.from, message.message);
+        };
+      })(this));
+    };
+
+    Channel.prototype.addMessage = function(sender, message) {
+      this.history.push({
+        sender: sender,
+        message: message
+      });
       return this.updateView();
     };
 
     Channel.prototype.updateView = function() {
-      console.log("name: " + this.name);
-      console.log("tostring: " + (JSON.stringify(this.toString())));
-      console.log("self: " + (JSON.stringify(this)));
       return $('#irc').html(templatizer.channel(this.toString()));
     };
 
     Channel.prototype.toString = function() {
       return {
         channel: {
-          name: this.name
+          name: this.name,
+          history: this.history
         }
       };
     };

@@ -225,7 +225,24 @@ exports["channel"] = function tmpl_channel(locals) {
     var jade_interp;
     var locals_for_with = locals || {};
     (function (channel) {
-        buf.push('<h3>' + jade.escape((jade_interp = channel.name) == null ? '' : jade_interp) + '</h3><section class="channel">This is totally the channel :-O</section>');
+        buf.push('<div class="channel"><h3>' + jade.escape((jade_interp = channel.name) == null ? '' : jade_interp) + '</h3><section class="chat">');
+        (function () {
+            var $$obj = channel.history;
+            if ('number' == typeof $$obj.length) {
+                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+                    var message = $$obj[$index];
+                    buf.push('<div class="irc-message">' + jade.escape(null == (jade_interp = message.sender + ': ' + message.message) ? '' : jade_interp) + '</div>');
+                }
+            } else {
+                var $$l = 0;
+                for (var $index in $$obj) {
+                    $$l++;
+                    var message = $$obj[$index];
+                    buf.push('<div class="irc-message">' + jade.escape(null == (jade_interp = message.sender + ': ' + message.message) ? '' : jade_interp) + '</div>');
+                }
+            }
+        }.call(this));
+        buf.push('</section><section class="users"></section></div>');
     }('channel' in locals_for_with ? locals_for_with.channel : typeof channel !== 'undefined' ? channel : undefined));
     return buf.join('');
 };

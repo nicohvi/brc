@@ -17,11 +17,10 @@ class ChannelController
         _channel.name == message.to
       ).pop()
 
-      console.log "channel: #{JSON.stringify(channel)}"
-
+      console.log "message for channel: #{JSON.stringify(channel)}"
       @channels.push new Channel(message.to, @events, {}) unless channel?
 
-      @events.emit 'add_message', channel
+      @events.emit 'add_message:channel', message
 
 
 root.ChannelController = ChannelController
