@@ -69,15 +69,6 @@ ircProxySchema.methods.initClientBindings = ->
   @client.on 'message', (from, to, message) =>
     addToHistory(from, to, message)
 
-  @client.on 'join', (channel, nick, message) =>
-    addChannel(channel)
-
-addToHistory = (from, to, message) =>
-  # todo
-
-addChannel = (channel) =>
-  # todo
-
 # channels: list of strings representing channel names
 ircProxySchema.methods.connect = (channels, done) ->
   for channel in channels
@@ -86,6 +77,11 @@ ircProxySchema.methods.connect = (channels, done) ->
 
 ircProxySchema.methods.join = (channel, done) ->
   @client.join channel, =>
+    unless channel in @servers[0].channels
+      @servers[0].channels.push { name: channel, history: [] }
+    @servers[0].channels.filter( (_channel) ->
+      _channel.name == channel
+    ).pop().status = 'active'
     done()
 
 ircProxySchema.methods.part = (channel, done) ->
