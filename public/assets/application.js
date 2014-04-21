@@ -5,11 +5,9 @@
 
   Application = (function() {
     function Application() {
-      this.eventEmitter = new EventEmitter();
-      this.views = [];
-      this.views.push(new HomeView(this.eventEmitter));
-      this.views.push(new HeaderView(this.eventEmitter));
-      this.views.push(new BRCView(this.eventEmitter));
+      this.events = new EventEmitter();
+      this.views = [new HomeView(this.events, new HeaderView(this.events, new BRCView(this.events)))];
+      this.controllers = [new WebsocketController(this.events, new ChannelController(this.events))];
     }
 
     return Application;
@@ -39,6 +37,111 @@
   $(function() {
     return App.get();
   });
+
+}).call(this);
+
+(function() {
+  var ChannelController, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  ChannelController = (function() {
+    function ChannelController(events) {
+      this.events = events;
+      this.initListeners = __bind(this.initListeners, this);
+      this.initListeners();
+      this.channels = [];
+    }
+
+    ChannelController.prototype.initListeners = function() {
+      this.events.on('add_channel', (function(_this) {
+        return function(channel) {
+          return _this.channels.push(new Channel(channel, _this.events, {}));
+        };
+      })(this));
+      return this.events.on('message', (function(_this) {
+        return function(message) {
+          var channel;
+          channel = _this.channels.filter(function(_channel) {
+            return _channel.name === message.to;
+          }).pop();
+          console.log("channel: " + (JSON.stringify(channel)));
+          if (channel == null) {
+            _this.channels.push(new Channel(message.to, _this.events, {}));
+          }
+          return _this.events.emit('add_message', channel);
+        };
+      })(this));
+    };
+
+    return ChannelController;
+
+  })();
+
+  root.ChannelController = ChannelController;
+
+}).call(this);
+
+(function() {
+  var WebsocketController, root,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  WebsocketController = (function() {
+    function WebsocketController(events) {
+      this.events = events;
+      this.emit = __bind(this.emit, this);
+      this.connect = __bind(this.connect, this);
+      this.initListeners = __bind(this.initListeners, this);
+      this.url = 'localhost';
+      this.initListeners();
+      console.log("websocket-controller created with url: " + this.url);
+    }
+
+    WebsocketController.prototype.initListeners = function() {
+      return this.events.on('connectToIRC', (function(_this) {
+        return function(proxyId) {
+          return _this.connect(function() {
+            return _this.emit('connectToIRC', {
+              proxyId: proxyId
+            });
+          });
+        };
+      })(this));
+    };
+
+    WebsocketController.prototype.connect = function(done) {
+      this.socket = io.connect(this.url);
+      this.socket.on('message', (function(_this) {
+        return function(message) {
+          console.log("client received " + (JSON.stringify(message)));
+          return _this.events.emit('message', message);
+        };
+      })(this));
+      this.socket.on('registered', (function(_this) {
+        return function(user) {
+          User.get();
+          return _this.events.emit('add_channel', '#status');
+        };
+      })(this));
+      this.socket.on('close', (function(_this) {
+        return function() {};
+      })(this));
+      return done();
+    };
+
+    WebsocketController.prototype.emit = function(command, data) {
+      console.log("emitting: " + command);
+      return this.socket.emit(command, data);
+    };
+
+    return WebsocketController;
+
+  })();
+
+  root.WebsocketController = WebsocketController;
 
 }).call(this);
 
@@ -95,47 +198,84 @@
 }).call(this);
 
 (function() {
-  var WebsocketClient, root,
+  var Channel, root,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
-  WebsocketClient = (function() {
-    function WebsocketClient(url, events) {
-      this.url = url;
+  Channel = (function() {
+    function Channel(name, events, opts) {
+      this.name = name;
       this.events = events;
-      this.emit = __bind(this.emit, this);
-      this.connect = __bind(this.connect, this);
-      console.log("websocket client created with url: " + this.url);
+      this.toString = __bind(this.toString, this);
+      this.updateView = __bind(this.updateView, this);
+      this.addMessage = __bind(this.addMessage, this);
+      this.mode = opts.mode;
+      this.topic = opts.topic;
+      this.history = [];
+      this.updateView();
     }
 
-    WebsocketClient.prototype.connect = function() {
-      this.socket = io.connect(this.url);
-      this.socket.on('message', (function(_this) {
-        return function(data) {
-          return console.log("client received " + data);
-        };
-      })(this));
-      this.socket.on('registered', (function(_this) {
-        return function(data) {
-          return console.log("client received registered");
-        };
-      })(this));
-      return this.socket.on('close', (function(_this) {
-        return function() {};
-      })(this));
+    Channel.prototype.addMessage = function(message) {
+      this.history.push(message);
+      return this.updateView();
     };
 
-    WebsocketClient.prototype.emit = function(command, data) {
-      console.log("emitting: " + command);
-      return this.socket.emit(command, data);
+    Channel.prototype.updateView = function() {
+      console.log("name: " + this.name);
+      console.log("tostring: " + (JSON.stringify(this.toString())));
+      console.log("self: " + (JSON.stringify(this)));
+      return $('#irc').html(templatizer.channel(this.toString()));
     };
 
-    return WebsocketClient;
+    Channel.prototype.toString = function() {
+      return {
+        channel: {
+          name: this.name
+        }
+      };
+    };
+
+    return Channel;
 
   })();
 
-  root.WebsocketClient = WebsocketClient;
+  root.Channel = Channel;
+
+}).call(this);
+
+(function() {
+  var User, UserSingleton, root;
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  UserSingleton = (function() {
+    function UserSingleton(nick, events) {
+      this.nick = nick;
+      this.events = events;
+      this.channels = [];
+    }
+
+    return UserSingleton;
+
+  })();
+
+  User = (function() {
+    var instance;
+
+    function User() {}
+
+    instance = null;
+
+    User.get = function() {
+      return instance != null ? instance : instance = new User();
+    };
+
+    return User;
+
+  })();
+
+  root.User = User;
 
 }).call(this);
 
@@ -149,21 +289,27 @@
     function BRCView(events) {
       this.events = events;
       this.initBindings = __bind(this.initBindings, this);
+      this.initListeners = __bind(this.initListeners, this);
       this.view = $('#irc');
       this.connect = $('#connect');
-      this.websocketClient = new WebsocketClient('localhost', this.events);
-      this.websocketClient.connect();
+      this.initListeners();
       this.initBindings();
     }
+
+    BRCView.prototype.initListeners = function() {
+      return this.events.on('', (function(_this) {
+        return function() {
+          return _this.view.append;
+        };
+      })(this));
+    };
 
     BRCView.prototype.initBindings = function() {
       return this.connect.on('click', (function(_this) {
         return function(event) {
           var $el;
           $el = _this.connect;
-          return _this.websocketClient.emit('connectToIRC', {
-            proxyId: $el.data('proxy-id')
-          });
+          return _this.events.emit('connectToIRC', $el.data('proxy-id'));
         };
       })(this));
     };
@@ -226,13 +372,13 @@
     }
 
     HomeView.prototype.initListeners = function() {
-      this.events.addListener('irc_proxy:submit:success', (function(_this) {
+      this.events.on('irc_proxy:submit:success', (function(_this) {
         return function(response) {
           _this.clearErrors();
           return _this.updateView(response);
         };
       })(this));
-      return this.events.addListener('irc_proxy:submit:error', (function(_this) {
+      return this.events.on('irc_proxy:submit:error', (function(_this) {
         return function(error) {
           return _this.showError(error);
         };

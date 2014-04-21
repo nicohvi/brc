@@ -43,13 +43,12 @@ ircProxySchema.virtual('events').set (eventEmitter) ->
   @eventEmitter = eventEmitter
 
 ircProxySchema.methods.createClient = (options, done) ->
-  console.log "createClient called with options: #{util.inspect options}"
-
   unless options?
     client = new irc.Client @servers[0].url, @nick
   else
     client = new irc.Client options.server, options.nick
 
+  console.log "Created IRC client: #{util.inspect client}"
   # instantiate virtual attributes
   @client = client
   @events = new events.EventEmitter()
@@ -67,7 +66,16 @@ ircProxySchema.methods.initClientBindings = ->
     console.log "error received: #{util.inspect message}"
 
   @client.on 'message', (from, to, message) =>
-    addToHistory(from, to, message)
+    console.log "client got message"
+    # addToHistory(from, to, message)
+    @events.emit 'message', {from: from, to: to, message: message}
+
+  # motd emitted right after joining the server
+  # @client.on 'motd', (motd) =>
+    # @events.emit 'message', {to: '#status', message: motd}
+
+  @client.on 'raw', (message) =>
+    @events.emit 'message', { to: '#status', message: message }
 
 # channels: list of strings representing channel names
 ircProxySchema.methods.connect = (channels, done) ->

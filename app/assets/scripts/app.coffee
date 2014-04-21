@@ -3,11 +3,19 @@ root = exports ? this
 class Application
 
   constructor: ->
-    @eventEmitter = new EventEmitter()
-    @views = []
-    @views.push new HomeView @eventEmitter
-    @views.push new HeaderView @eventEmitter
-    @views.push new BRCView @eventEmitter
+    @events = new EventEmitter()
+    @views =
+      [
+        new HomeView @events,
+        new HeaderView @events,
+        new BRCView @events
+      ]
+    @controllers =
+      [
+        new WebsocketController @events,
+        new ChannelController @events
+      ]
+      
 
 class App
 
@@ -15,5 +23,8 @@ class App
 
   @get: ->
     instance ?= new Application()
+
+
+
 
 root.App = App

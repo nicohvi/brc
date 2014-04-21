@@ -27,18 +27,19 @@ describe 'connect to the given IRC server through BRC', ->
       IRCProxy.remove ->
         done()
 
-  # it 'should connect to the registered IRC server through the proxy', (done) ->
-  #   agent = superagent.agent()
-  #
-  #   agent
-  #     .post "#{serverUrl}/login"
-  #     .send email: 'valid@user.com', password: '123password'
-  #     .end (err, res) ->
-  #       $ = cheerio.load(res.text)
-  #       proxyId = $('#connect').attr('data-proxy-id')
-  #       agent
-  #       .post "#{serverUrl}/connect"
-  #       .send proxyId: proxyId
-  #       .end (err, res) ->
-  #         res.status.should.equal 200
-  #         done()
+  it 'should connect to the registered IRC server through the proxy', (done) ->
+    agent = superagent.agent()
+
+    agent
+      .post "#{serverUrl}/login"
+      .send email: 'valid@user.com', password: '123password'
+      .end (err, res) ->
+        $ = cheerio.load(res.text)
+        proxyId = $('#connect').attr('data-proxy-id')
+        agent
+        .post "#{serverUrl}/connect"
+        .send proxyId: proxyId
+        .end (err, res) ->
+          res.text.should.include "status"
+          res.status.should.equal 200
+          done()

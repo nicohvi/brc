@@ -38,3 +38,9 @@ module.exports = (grunt) ->
   grunt.registerTask('test', 'mochaTest:unit')
   grunt.registerTask('newTest', 'newer:mochaTest:unit')
   grunt.registerTask('integrate', 'mochaTest:integration')
+  grunt.registerTask('jade', 'compile jade templates client side', ->
+    templatizer = require('templatizer')
+    templatizer( "#{__dirname}/app/assets/scripts/views/templates/",
+      "#{__dirname}/public/assets/templates.js"
+    )
+  )

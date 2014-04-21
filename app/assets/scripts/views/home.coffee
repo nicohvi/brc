@@ -10,11 +10,11 @@ class HomeView
     @initBindings()
 
   initListeners: =>
-    @events.addListener 'irc_proxy:submit:success', (response) =>
+    @events.on 'irc_proxy:submit:success', (response) =>
       @clearErrors()
       @updateView(response)
 
-    @events.addListener 'irc_proxy:submit:error', (error) =>
+    @events.on 'irc_proxy:submit:error', (error) =>
       @showError(error)
 
   initBindings: =>

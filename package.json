@@ -24,6 +24,7 @@
     "coffee-script": "*",
     "grunt": "*",
     "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-jade": "^0.11.0",
     "grunt-contrib-stylus": "^0.14.0",
     "grunt-contrib-watch": "*",
     "grunt-mocha-test": "*",
