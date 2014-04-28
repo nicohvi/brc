@@ -34,4 +34,4 @@ userSchema.methods.createProxy = (done) ->
     done(error, null) if error
     done(null, ircProxy)
 
-module.exports = User = db.model('User', userSchema)
+module.exports = User = mongoose.model('User', userSchema)

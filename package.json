@@ -2,7 +2,7 @@
   "name": "bnc",
   "version": "0.0.1",
   "scripts": {
-    "start": "coffee app.coffee"
+    "start": "brc"
   },
   "repository": {
     "type": "git",
@@ -15,8 +15,8 @@
     "mongoose": "*",
     "passport": "*",
     "passport-local": "*",
-    "connect-flash": "*",
     "connect-redis": "1.4.7",
+    "connect-assets": "*",
     "bcrypt-nodejs": "*"
   },
   "devDependencies": {

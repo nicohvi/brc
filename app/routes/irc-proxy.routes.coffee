@@ -14,7 +14,7 @@ module.exports = (app, passport) ->
             proxy.nick = req.body.nick if req.body.nick?
             if req.body.server?
               server = { url: req.body.server, channels: [] }
-              proxy.servers.unshift server
+              proxy.servers.push server
             proxy.save (error) ->
               return handleError(res, error) if error
               res.send { message: 'Proxy updated.', proxy: proxy }
@@ -24,7 +24,7 @@ module.exports = (app, passport) ->
               proxy.nick = req.body.nick if req.body.nick?
               if req.body.servers?
                 server = { url: req.body.server, channels: [] }
-                proxy.servers.unshift server
+                proxy.servers.push server
               proxy.save (error) ->
                 handleError(error) if error
                 res.send { message: 'Proxy created.', proxy: proxy }

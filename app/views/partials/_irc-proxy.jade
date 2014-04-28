@@ -12,13 +12,16 @@ section#irc-proxy
         aside.lock
           i.fa.fa-lock
 
-    if proxy.servers[0]
-      section.form-row
-        section.form-element
-          aside Server
-          input.double-button(type="text" name="server" value="#{proxy.servers[0].url}" disabled)
-          aside.lock
-            i.fa.fa-lock
+    if proxy.servers
+      h4 Servers
+      each server in proxy.servers
+        section.form-row
+          section.form-element
+            input.double-button(type="text" name="server" value="#{server.url}" disabled)
+            aside.lock.button
+              i.fa.fa-lock
+            aside.delete.button
+              i.fa.fa-times
 
     else
       section.form-row

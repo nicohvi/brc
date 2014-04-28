@@ -1,5 +1,5 @@
 mongoose = require 'mongoose'
-irc = require '../../lib/irc/irc'
+irc = require '../../config/irc-bridge'
 util = require 'util'
 events = require 'events'
 _ = require 'underscore'
@@ -12,9 +12,9 @@ ircProxySchema = Schema
     required: true,
     unique: true
   nick: String
+  connected: Boolean
   servers: [serverSchema]
 
-# TODO: add functionality to have more servers
 serverSchema = Schema
   url: String
   channels: [channelSchema]
@@ -22,7 +22,6 @@ serverSchema = Schema
 channelSchema = Schema
   name: String
   history: [messageSchema]
-  status: String
 
 messageSchema = Schema
   from: String,
@@ -30,11 +29,11 @@ messageSchema = Schema
   message: String
 
 # virtuals might be redundant
-ircProxySchema.virtual('client').get ->
-  @ircClient
-
-ircProxySchema.virtual('client').set (client) ->
-  @ircClient = client
+# ircProxySchema.virtual('client').get ->
+#   @ircClient
+#
+# ircProxySchema.virtual('client').set (client) ->
+#   @ircClient = client
 
 ircProxySchema.virtual('events').get ->
   @eventEmitter
@@ -71,11 +70,14 @@ ircProxySchema.methods.initClientBindings = ->
     @events.emit 'message', {from: from, to: to, message: message}
 
   # motd emitted right after joining the server
-  # @client.on 'motd', (motd) =>
+  @client.on 'motd', (motd) =>
+    console.log "MOTD: #{util.inspect(motd)}"
     # @events.emit 'message', {to: '#status', message: motd}
 
   @client.on 'raw', (message) =>
-    @events.emit 'message', { from: message.server, to: '#status', message: message.args[1] }
+    return false if message.command == "PING"
+    # console.log "RAW MESSAGE: #{util.inspect((message.args[1]))}"
+    @events.emit 'message', { from: message.prefix, to: '#status', message: message.args[1] }
 
 # channels: list of strings representing channel names
 ircProxySchema.methods.connect = (channels, done) ->
@@ -111,9 +113,9 @@ ircProxySchema.methods.say = (to, message, done) ->
 
   @client.say to, message
   done(@client) if done?
+# 
+# ircProxySchema.methods.emit = (event, data) ->
+#
+#   @db.model('IRCProxy').emit event, data
 
-ircProxySchema.methods.emit = (event, data) ->
-
-  @db.model('IRCProxy').emit event, data
-
-module.exports = db.model('IRCProxy', ircProxySchema)
+module.exports = mongoose.model('IRCProxy', ircProxySchema)
