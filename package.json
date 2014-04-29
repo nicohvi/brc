@@ -9,29 +9,14 @@
     "url": "http://github.com/nicohvi/brc.git"
   },
   "dependencies": {
-    "express": "*",
-    "jade": "*",
-    "stylus": "*",
-    "mongoose": "*",
-    "passport": "*",
-    "passport-local": "*",
-    "connect-redis": "1.4.7",
-    "connect-assets": "*",
-    "bcrypt-nodejs": "*"
-  },
-  "devDependencies": {
-    "cheerio": "^0.15.0",
-    "coffee-script": "*",
-    "grunt": "*",
-    "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-jade": "^0.11.0",
-    "grunt-contrib-stylus": "^0.14.0",
-    "grunt-contrib-watch": "*",
-    "grunt-mocha-test": "*",
-    "grunt-newer": "~0.7.0",
-    "mocha": "*",
-    "should": "*",
-    "superagent": "*",
-    "supertest": "*"
+    "express": "3.3.x",
+    "jade": "0.34.x",
+    "connect-assets": "2.5.x",
+    "irc": "0.3.x",
+    "socket.io": "0.9.x",
+    "bcrypt-nodejs": "0.0.x",
+    "jugglingdb-postgres": "0.0.x",
+    "jugglingdb": "0.2.x",
+    "node-uuid": "1.4.x"
   }
 }
