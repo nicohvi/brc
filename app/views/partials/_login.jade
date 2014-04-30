@@ -1,24 +1,12 @@
-form(action="/login" method="post")
+form#login-form.hidden
+  section.form-element
+    aside
+      i.fa.fa-envelope
+    input(type="text", name="username", placeholder="derp@derp.com")
 
-  if message.length > 0
-    div.message.alert #{message}
-
-  section.form-row
-    section.form-element
-      aside
-        i.fa.fa-envelope
-      input(type="text" name="email" placeholder="derp@derp.com")
-
-    section.form-element
-      aside
-        i.fa.fa-lock
-      input(type="password" name="password")
-
-  section.form-row
-    section.form-element
-      input(type="checkbox" name="rememberme")
-      label Remember me, pretty please.
-
-  button(type="submit") Log in
-
-  p Or, you know - you could totally <a href="/signup">sign up</a>.
+  section.form-element
+    aside
+      i.fa.fa-lock
+    input(type="password", name="password")
+    aside
+      a#login Log in
