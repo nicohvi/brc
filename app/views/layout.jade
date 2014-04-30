@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title BRC
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css')
+    != css('application')
+    != js('client')
+    include templates
+    //- link(rel='stylesheet' href='http://fonts.googleapis.com/css?family=Inconsolata:400,700')
+    //- script(src='//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js')
+    //- script(src='/assets/lib/EventEmitter.js')
+  body
+
+    section.content
+      block content

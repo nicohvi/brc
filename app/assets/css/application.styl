@@ -1,68 +1,13 @@
+@import 'reset'
+@import 'header'
 @import 'form'
 @import 'irc'
 
-// global variables
-$red = #dd5858
+// fonts
 @import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700)
 
-// resets
-body, html
-  margin:0
-  padding:0
-
-#hoverBox
-  padding: 1em
-  color: #fff
-  font-size: .5em
-  letter-spacing: .1em
-  position: absolute
-  display: none
-
-header
-  background: linear-gradient(to bottom, #5680AA 0, #47698b 100%)
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1)
-  padding: .3em
-  display: flex
-  flex-flow: row wrap
-  justify-content: flex-end
-  align-items: center
-  color: #fff
-  height: 30px
-
-  a
-    color: #fff
-    padding: .2em .4em
-    opacity: .6
-    transition: opacity .3s
-    transition: margin .3s
-
-    &:hover
-      background: rgba(255,255,255,.3)
-      border-radius: 3px
-      opacity: 1
-
-  .user
-    font-size: .8em
-
-body
-  background-color: whiteSmoke
-  font-family: Georgia, serif
-  color: #333
-
-h1,h2,h3
-  font-family: verdana, sans-serif
-
-h1
-  font-size: 3em
-
-h2
-  font-size: 2.5em
-
-p
-  line-height: 1.5
-
-a
-  color: #333
+// global variables
+$red = #dd5858
 
 .content
   width: 70%
@@ -78,22 +23,44 @@ a
   vertical-align: middle
   margin-left: 1.5em
 
-// utility styles
-.hidden
-  opacity: 0
-  box-sizing: border-box
-  margin: 0
-  padding: 0
-
-// Typography
-
-.irc-nick
-  background: $red
-  box-sizing: border-box
-  display: inline-block
+#hoverBox
+  padding: 1em
   color: #fff
-  padding: .2em .4em
-  border-radius: 20px
+  font-size: .5em
+  letter-spacing: .1em
+  position: absolute
+  display: none
+
+.message
+  color: #fff
+  font-family: Verdana, sans-Serif
+  font-size: .8em
+  cursor: pointer
+
+  &.alert
+    background-color: #dd5858
+    border: 1px solid rgba(147,128,108,0.25)
+
+  &.notice
+    background-color: #3d9970
+
+  &:not(.hidden)
+    padding: .75em
+    margin-bottom: 0.8em
+    border-radius: 2px
+
+#user-actions
+  display: flex
+  flex-wrap: wrap
+  margin: 100px auto
+  width: 70%
+
+  #login-form
+    flex: 1
+    margin-right: 1em
+
+  #signup-form
+    flex: 1
 
 // Media queries
 @media(max-width: 800px)

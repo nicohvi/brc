@@ -1,0 +1,5 @@
+#= require 'lib/jquery-2.0.0.min.js'
+#= require 'lib/underscore.min.js'
+#= require 'lib/backbone.min.js'
+#= require 'lib/icanhaz.min.js'
+#= require_tree 'views'
