@@ -1,12 +1,19 @@
 $ ->
   class HomeView extends Backbone.View
 
-    el: $('#app')
+    el: $('#home')
 
     initialize: ->
       @render()
 
-    render: ->
-      $(@el).html(ich.home())
+    events: {
+      'click .login': 'openLoginForm'
+    }
 
-  homeView = new HomeView
+    openLoginForm: (event) ->
+
+    render: ->
+      debugger
+      $(@el).html ich.home()
+
+  @HomeView = HomeView

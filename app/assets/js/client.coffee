@@ -3,3 +3,11 @@
 #= require 'lib/backbone.min.js'
 #= require 'lib/icanhaz.min.js'
 #= require_tree 'views'
+
+# global variables
+irc =
+  connected: false,
+  loggedIn: false,
+
+$ ->
+  irc.appView = new AppView()
