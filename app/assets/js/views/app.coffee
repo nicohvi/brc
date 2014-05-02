@@ -8,6 +8,6 @@ $ =>
       @home = new HomeView()
 
     render: ->
-      $(@el).html ich.appTmp()
+      @$el.html ich.appTmp()
 
   @AppView = AppView

@@ -2,6 +2,7 @@
 #= require 'lib/underscore.min.js'
 #= require 'lib/backbone.min.js'
 #= require 'lib/icanhaz.min.js'
+#= require 'lib/flip-jquery'
 #= require_tree 'views'
 
 # global variables

@@ -17,6 +17,9 @@
     "bcrypt-nodejs": "0.0.x",
     "jugglingdb-postgres": "0.0.x",
     "jugglingdb": "0.2.x",
-    "node-uuid": "1.4.x"
+    "node-uuid": "1.4.x",
+    "stylus": "*",
+    "nib": "*",
+    "bootstrap-stylus": "*"
   }
 }

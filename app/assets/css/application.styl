@@ -1,3 +1,4 @@
+@import 'nib'
 @import 'reset'
 @import 'header'
 @import 'form'
@@ -50,17 +51,40 @@ $red = #dd5858
     border-radius: 2px
 
 #user-actions
+  perspective: 1000
   display: flex
   flex-wrap: wrap
   margin: 50px auto
   width: 70%
-  box-shadow: 1px 1px 10px #ddd
-  padding: 5em 1em
+
+  .flipped
+    transform: rotateY(-180deg)
+
+    .back
+      transform: rotateY(-180deg)
+
+  .flip
+    flex: 1
+    box-shadow: 1px 1px 10px #ddd
+    padding: 5em 1em
+    height: 100%
+    transform-style: preserve-3d
+    transition: .8s
+    height: 250px
+
+    div
+      transition: .4s
+
+.front
+  flex: 1
+  display: flex
+  flex-wrap: wrap
 
   .cell
     padding-left: 1em
     flex: 1
     text-align: center
+
 
 // Media queries
 @media(max-width: 800px)
