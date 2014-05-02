@@ -1,9 +1,9 @@
-$ ->
+$ =>
+
   class HomeView extends Backbone.View
 
-    el: $('#home')
-
     initialize: ->
+      @el = $('#home')
       @render()
 
     events: {
@@ -14,6 +14,6 @@ $ ->
 
     render: ->
       debugger
-      $(@el).html ich.home()
+      $(@el).html ich.homeTmp()
 
   @HomeView = HomeView

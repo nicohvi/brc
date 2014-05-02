@@ -1,12 +1,13 @@
-$ ->
+$ =>
   class AppView extends Backbone.View
 
-  el: $('#app')
+    el: $('#app')
 
-  initialize: ->
-    @home = new HomeView()
+    initialize: ->
+      @render()
+      @home = new HomeView()
 
-  render: ->
-    $(@el).html ich.app()
+    render: ->
+      $(@el).html ich.appTmp()
 
-@AppView = AppView
+  @AppView = AppView
