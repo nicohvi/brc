@@ -66,14 +66,20 @@ $red = #dd5858
   .flip
     flex: 1
     box-shadow: 1px 1px 10px #ddd
-    padding: 5em 1em
-    height: 100%
+    padding: 0 2em
+    align-items: center
     transform-style: preserve-3d
     transition: .8s
     height: 250px
+    display: flex
 
     div
       transition: .4s
+      flex: 1
+
+    .unflex
+      height: 0
+      flex: 0
 
 .front
   flex: 1

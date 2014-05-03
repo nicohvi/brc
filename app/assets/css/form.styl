@@ -14,6 +14,9 @@ form
   flex: 1
   font-family: Verdana, sans-Serif
 
+  aside + input, input + aside
+    border-left: 0
+
   input
     flex: 1
     border: 1px solid rgba(147,128,108,.25)
@@ -36,6 +39,12 @@ form
     background-color: rgba(147,128,108,.1)
     border-radius: 2px 0 0 2px
     transition: background .3s
+    box-sizing: border-box
+    text-align: center
+
+    &:first-of-type
+      min-width: 40px
+      max-width: 40px
 
     &.button
       cursor: pointer
@@ -43,3 +52,7 @@ form
     &.delete:hover
       background: $red
       color: #fff
+
+.cancel
+  color: #666
+  cursor: pointer

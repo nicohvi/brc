@@ -4,17 +4,18 @@ $.fn.flip = (callback) ->
   if $(@).find('.back').hasClass('hidden')
     $(@).find('.front').addClass('hidden')
     callback = =>
-      callback2 = =>
-        $(@).find('.back').removeClass('hidden')
       $(@).toggleClass('flipped')
+      callback2 = =>
+        $(@).find('.front').toggleClass('unflex')
+        $(@).find('.back').removeClass('hidden unflex')
       setTimeout(callback2, 800)
   else
     $(@).find('.back').addClass('hidden')
     callback = =>
       $(@).toggleClass('flipped')
       callback2 = =>
-        $(@).find('.front').removeClass('hidden')
+        $(@).find('.back').toggleClass('unflex')
+        $(@).find('.front').removeClass('hidden unflex')
       setTimeout(callback2, 800)
-
 
   setTimeout(callback, 400)
