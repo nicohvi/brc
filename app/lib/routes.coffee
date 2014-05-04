@@ -30,16 +30,16 @@ module.exports = (app) ->
     .then(
       (user) ->
         throw new Error('Couldn\'t find a user with that email') unless user?
-        return compare(req.body.password, user.password)
-    )
-    .then(
-      (result) ->
-        throw new Error('Wrong password, brah.') unless result
-        res.json 'logged in!'
+        compare(req.body.password, user.password)
+        .then(
+          (result) ->
+            throw new Error('Wrong password, brah.') unless result
+            res.json JSON.stringify('user': user)
+        )
     )
     .fail(
       (error) ->
-        res.json JSON.stringify('message': error.message)
+        res.json JSON.stringify('error': 'message': error.message)
     )
     .done()
 
@@ -75,16 +75,16 @@ module.exports = (app) ->
     )
     .fail(
       (error) ->
-        res.json JSON.stringify('message': error.message)
+        res.json JSON.stringify( 'error': 'message': error.message)
     )
     .done()
 
   validateParams = (params) ->
     for name, value of params
       unless value.length > 0
-        return 'message': 'Don\'t just submit an empty form, brah.'
+        return 'error': 'message': 'Don\'t just submit an empty form, brah.'
         break
       if name == 'username' && !validator.isEmail(value)
-        return 'message': 'Invalid email, brah.'
+        return 'error': 'message': 'Invalid email, brah.'
         break
     null
