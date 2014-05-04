@@ -20,6 +20,9 @@
     "node-uuid": "1.4.x",
     "stylus": "*",
     "nib": "*",
-    "bootstrap-stylus": "*"
+    "bootstrap-stylus": "*",
+    "q": "*",
+    "bcrypt": "*",
+    "validator": "*" 
   }
 }

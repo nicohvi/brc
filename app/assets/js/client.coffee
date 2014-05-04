@@ -3,6 +3,7 @@
 #= require 'lib/backbone.min.js'
 #= require 'lib/icanhaz.min.js'
 #= require 'lib/flip-jquery'
+#= require 'lib/post-jquery'
 #= require_tree 'views'
 
 # global variables

@@ -23,6 +23,7 @@ app.configure ->
   app.set 'views', "#{root}/views"
 
   app.use stylus.middleware( { src: root, compile: compile } )
+  app.use express.json()
 
   # TODO: use winston for logging
   app.use express.logger('dev')
@@ -42,6 +43,3 @@ app.configure 'production', ->
 
 port = app.get 'port'
 server.listen(port)
-
-app.get '/', (req, res) ->
-  res.render 'index.jade'

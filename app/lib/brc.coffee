@@ -7,6 +7,7 @@ io = require 'socket.io'
 Schema = require('jugglingdb').Schema
 uuid = require 'node-uuid'
 modelMapper = require './models'
+util = require 'util'
 
 class Brc
 
@@ -27,13 +28,14 @@ class Brc
     @app.io = io.listen(server)
     @app.io.set('log level', 3) if config.debug
 
-    # setup the IRC manager to connect our app to node-irc
-    require('./irc-manager')(app)
+    # setup route API
+    require('./routes')(@app)
 
-    # setup socket API
+    # setup the IRC manager to connect our app to node-irc
+    require('./irc-manager')(@app)
     socketManager = require './socket'
     @app.io.sockets.on 'connection', (socket) ->
-      socketManager(socket, app)
+      socketManager(socket, @app)
 
     console.log "brc started on port #{server.address().port}" if server.address()
 
