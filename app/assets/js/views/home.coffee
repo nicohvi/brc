@@ -30,7 +30,7 @@ $ =>
 
     goHome: (event) ->
       $('.notice').removeClass('show left right')
-      @$el.find('#user-actions .flip').flip()
+      @card.flip()
 
     handleError: (error) =>
       $field = $("input[name=#{error.field}]")
