@@ -1,5 +1,5 @@
 $.fn.flip = () ->
-
+  
   if $(@).find('.back').hasClass('hidden')
     $(@).find('.front').addClass('hidden')
     callback = =>

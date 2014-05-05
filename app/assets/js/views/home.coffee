@@ -1,5 +1,7 @@
 $ =>
 
+  deferred = Q.defer()
+
   class HomeView extends Backbone.View
 
     initialize: ->
@@ -33,6 +35,10 @@ $ =>
       @$el.find('#user-actions .flip').flip()
 
     login: (event) =>
+      formData =
+        username: $('input[name=username]').val(),
+        password: $('input[name=password]').val()
+
       $.post('/login', JSON.stringify @serializeForm() )
       .done (data) =>
         response = JSON.parse(data)
@@ -45,13 +51,33 @@ $ =>
         @trigger 'error', jqXHR
 
     signup: (event) ->
-      $.post('/signup', JSON.stringify @serializeForm() )
-      .done (data) ->
-        debugger
-      .fail (jqXHR) ->
+      formData =
+        username: $('input[name=username]').val(),
+        password: $('input[name=password]').val(),
+        password_confirmation: $('input[name=password_confirmation]').val()
 
-    handleError: (error) ->
-      @$el.find('.notice').addClass('error').html(error.message).fadeIn('fast')
+      Q.fcall(@validateForm, formData)
+      .then(
+        () ->
+          $.post('/signup', JSON.stringify @serializeForm() )
+          .done (data) ->
+            debugger
+          .fail (jqXHR) ->
+      )
+      .fail(
+        (error) =>
+          @trigger 'error', error
+      )
+      .done()
+
+    handleError: (error) =>
+      $field = $("input[name=#{error.field}]")
+      $field.parents('.form-element').addClass('error')
+      $('<div class="notice"></div>')
+        .css(top: "#{$field.offset().top+6}px", left: "#{$field.offset().left+$field.outerWidth()+20}px")
+        .html(error.message)
+        .addClass('show')
+        .prependTo('body')
 
     clearNotice: (event) ->
       @$el.find('.notice').fadeOut('fast', () -> $(@).removeClass('error'))
@@ -59,13 +85,14 @@ $ =>
     loggedIn: (user) ->
       @$el.find('.notice').removeClass('error').html("Logged in as #{user.username}").fadeIn('fast')
 
-    serializeForm: ->
-
-      formData =
-        username: $('input[name=username]').val(),
-        password: $('input[name=password]').val()
-
     render: ->
       @$el.html ich.homeTmp()
+
+    validateForm: (params) ->
+      for name, value of params
+        unless value.length > 0
+          throw new ValidationError(name, 'required')
+        if name == 'username' && !validator.isEmail(value)
+          throw new ValidationError(name, 'email')
 
   @HomeView = HomeView

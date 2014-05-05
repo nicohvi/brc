@@ -43,7 +43,7 @@ $green = #3d9970
     background-color: #dd5858
     border: 1px solid rgba(147,128,108,0.25)
 
-  &.notice
+  &.'notice'
     background-color: #3d9970
 
   &:not(.hidden)
@@ -56,7 +56,7 @@ $green = #3d9970
   display: flex
   flex-wrap: wrap
   margin: 50px auto
-  width: 70%
+  width: 350px
 
   .flipped
     transform: rotateY(-180deg)
@@ -92,19 +92,42 @@ $green = #3d9970
     flex: 1
     text-align: center
 
+.notice
+  opacity: 0
+  padding: .8em
+  background: #666
+  color: #fff
+  font-size: .6em
+  position: absolute
+  z-index: 1
+
+  &.show
+    opacity: 1
+
+  &:before
+    content: ""
+    display: block
+    height: 0
+    width: 0
+    border: 10px solid #666
+    border-width: 5px 5px 5px 0
+    border-color: rgba(238,238,238,0) #666 rgba(238,238,238,0) rgba(238,238,238,0)
+    position: absolute
+    left: -5px
+    top: 9px
 
 .notice
-  margin: 1em 0
-  font-size: .8em
-  color: #fff
-  border-radius: 5px
-  padding: .8em
-  cursor: pointer
-  background: $green
-  transition: .4s
+  // margin: 1em 0
+  // font-size: .8em
+  // color: #fff
+  // border-radius: 5px
+  // padding: .8em
+  // cursor: pointer
+  // background: $green
+  // transition: .4s
 
   &.error
-    background: $red
+    // background: $red
 
 // Media queries
 @media(max-width: 800px)

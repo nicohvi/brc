@@ -1,5 +1,4 @@
 form#signup-form
-  section.notice(style="display:none")
 
   section.form-element
     aside
@@ -8,8 +7,13 @@ form#signup-form
 
   section.form-element
     aside
-      i.fa.fa-lock
+      i.fa.fa-unlock-alt
     input(type="password", name="password")
+
+  section.form-element
+    aside
+      i.fa.fa-lock
+    input(type="password", name="password_confirmation")
     aside.button
       a#signup Sign up
 
