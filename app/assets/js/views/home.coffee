@@ -1,98 +1,65 @@
 $ =>
 
-  deferred = Q.defer()
-
   class HomeView extends Backbone.View
 
     initialize: ->
       @setElement('#home')
-      @render()
+
+      # events
+      @bind('close_form', @goHome)
       @bind('error', @handleError)
-      @bind('logged_in', @loggedIn)
+      @bind('clear_errors', @clearErrors)
+
+      @render()
+      @card = @$el.find('#user-actions .flip')
 
     events: {
       'click .login':  'openLoginForm',
-      'click .signup': 'openSignupForm',
-      'click .cancel': 'goHome',
-      'click #login':  'login',
-      'click #signup': 'signup',
-      'click .notice': 'clearNotice'
+      'click .signup': 'openSignupForm'
     }
 
-    openLoginForm: (event) ->
-      card = @$el.find('#user-actions .flip')
-      card.find('.back').html ich.loginTmp()
-      card.flip()
-      @delegateEvents()
+    openLoginForm: (event) =>
+      @card.find('.back').html('<section id="login-form"></section>')
+      @login = new LoginView { parent: @ }
+      @card.flip()
 
     openSignupForm: (event) ->
-      card = @$el.find('#user-actions .flip')
-      card.find('.back').html ich.signupTmp()
-      card.flip()
-      @delegateEvents()
+      @card.find('.back').html('<section id="signup-form"></section>')
+      @signup = new SignupView { parent: @ }
+      @card.flip()
 
     goHome: (event) ->
+      $('.notice').removeClass('show left right')
       @$el.find('#user-actions .flip').flip()
-
-    login: (event) =>
-      formData =
-        username: $('input[name=username]').val(),
-        password: $('input[name=password]').val()
-
-      $.post('/login', JSON.stringify @serializeForm() )
-      .done (data) =>
-        response = JSON.parse(data)
-        if response.error?
-          @trigger 'error', response.error
-        else
-          @trigger 'logged_in', response.user
-
-      .fail (jqXHR) =>
-        @trigger 'error', jqXHR
-
-    signup: (event) ->
-      formData =
-        username: $('input[name=username]').val(),
-        password: $('input[name=password]').val(),
-        password_confirmation: $('input[name=password_confirmation]').val()
-
-      Q.fcall(@validateForm, formData)
-      .then(
-        () ->
-          $.post('/signup', JSON.stringify @serializeForm() )
-          .done (data) ->
-            debugger
-          .fail (jqXHR) ->
-      )
-      .fail(
-        (error) =>
-          @trigger 'error', error
-      )
-      .done()
 
     handleError: (error) =>
       $field = $("input[name=#{error.field}]")
       $field.parents('.form-element').addClass('error')
-      $('<div class="notice"></div>')
-        .css(top: "#{$field.offset().top+6}px", left: "#{$field.offset().left+$field.outerWidth()+20}px")
+
+      if $field.next('aside').length > 0
+        _class = 'left'
+        leftPosition = $field.offset().left-120
+      else
+        _class = 'right'
+        leftPosition = $field.offset().left+$field.outerWidth()+20
+
+      $('.notice')
+        .css(top: "#{$field.offset().top+6}px", left: "#{leftPosition}px")
         .html(error.message)
-        .addClass('show')
-        .prependTo('body')
+        .addClass("show #{_class}")
 
-    clearNotice: (event) ->
-      @$el.find('.notice').fadeOut('fast', () -> $(@).removeClass('error'))
-
-    loggedIn: (user) ->
-      @$el.find('.notice').removeClass('error').html("Logged in as #{user.username}").fadeIn('fast')
-
-    render: ->
-      @$el.html ich.homeTmp()
+    clearErrors: (event) ->
+      $('.error').removeClass('error')
+      $('.notice').removeClass('show left right')
 
     validateForm: (params) ->
       for name, value of params
         unless value.length > 0
-          throw new ValidationError(name, 'required')
+          throw new ValidationError(name, 'Required')
         if name == 'username' && !validator.isEmail(value)
-          throw new ValidationError(name, 'email')
+          throw new ValidationError(name, 'Invalid email')
+
+    render: ->
+      @$el.html ich.homeTmp()
 
   @HomeView = HomeView
